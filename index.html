@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="Mr Thuong AgenticAI — https://htsolutiontech.github.io/AIConsulting/">
+<title>GeoAgent Pilot — Agentic AI cho Đo đạc & CSDL Đất đai</title>
+<style>
+:root{
+  --bg:#F4F2EC; --surface:#FFFFFF; --surface2:#FAF8F3; --band:#EEEAE0; --line:#DCD7CA; --text:#0F1E2E; --body:#3A4654; --muted:#5A6573;
+  --head:#0F1E2E; --head-text:#FFFFFF; --head-sub:#B9C6D2; --head-chip:#1E3A52;
+  --accent:#E8A33D; --accent-d:#8F530A; --accent-l:#FCEFD9; --teal:#1F6F6A; --teal-l:#DDEFEC;
+  --red:#B4372B; --red-l:#F8E1DD; --ok:#2E7D4F; --ok-l:#E2F1E7; --warn-t:#5B3B07;
+  --btn:#0F1E2E; --btn-t:#FFFFFF; --btn-h:#16304A; --sel:#FFF7E6; --hover:#FBF8F1;
+  --log:#0B1724; --log-t:#D5E1EA; --input:#FFFFFF; --ta:#FCFBF8;
+  --m-bg:#FBFAF6; --m-ok:#CFE8D8; --m-warn:#FBE3B8; --m-err:#F3C4BC; --m-stroke:#4A5568; --m-sel:#0F1E2E; --m-pt:#0F1E2E;
+  --shadow:0 1px 2px rgba(15,30,46,.06);
+  --r:10px;
+}
+html[data-theme=dark]{
+  --bg:#0D1620; --surface:#14212E; --surface2:#182838; --band:#1D2F41; --line:#2A3E52; --text:#E7EDF2; --body:#C3CFDA; --muted:#93A4B4;
+  --head:#08111A; --head-text:#F2F5F8; --head-sub:#93A4B4; --head-chip:#1A2C3E;
+  --accent:#F0B04D; --accent-d:#F0B04D; --accent-l:#3A2C14; --teal:#5CC4BC; --teal-l:#12302E;
+  --red:#F08C7F; --red-l:#3A1E1B; --ok:#6CCB93; --ok-l:#142E21; --warn-t:#F6D59A;
+  --btn:#E7EDF2; --btn-t:#0D1620; --btn-h:#C9D4DE; --sel:#2A2412; --hover:#1A2B3B;
+  --log:#060C12; --log-t:#D5E1EA; --input:#0F1A25; --ta:#0F1A25;
+  --m-bg:#101B26; --m-ok:#1F4A35; --m-warn:#5A4320; --m-err:#5C2A25; --m-stroke:#8EA3B6; --m-sel:#F0B04D; --m-pt:#C9D4DE;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45;-webkit-text-size-adjust:100%}
+a{color:var(--teal)}
+button{font:inherit;cursor:pointer;color:inherit}
+input,select,textarea{font:inherit;color:var(--text)}
+.app{display:grid;grid-template-columns:236px 1fr;grid-template-rows:auto 1fr;height:100vh;height:100dvh}
+header{grid-column:1/3;background:var(--head);color:var(--head-text);display:flex;align-items:center;gap:12px;padding:10px 16px;flex-wrap:wrap;min-height:56px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;white-space:nowrap}
+.sub{color:var(--head-sub);font-size:12.5px}
+.hdr-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hdr-right select{background:var(--head-chip);color:var(--head-text);border:1px solid transparent;border-radius:8px;padding:5px 8px;max-width:260px}
+.iconbtn{background:var(--head-chip);color:var(--head-text);border:none;border-radius:8px;width:34px;height:32px;font-size:16px;line-height:1}
+#navBtn{display:none}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:600;white-space:nowrap}
+.chip.dark{background:var(--head-chip);color:var(--head-text)}
+.chip.ok{background:var(--ok-l);color:var(--ok)}.chip.warn{background:var(--accent-l);color:var(--accent-d)}.chip.err{background:var(--red-l);color:var(--red)}.chip.info{background:var(--teal-l);color:var(--teal)}.chip.grey{background:var(--band);color:var(--muted)}
+.role-admin{background:#3B2F6B !important;color:#E5DEFF !important}.role-ceo{background:var(--accent) !important;color:#0F1E2E !important}.role-staff{background:var(--teal) !important;color:#fff !important}
+nav{background:var(--surface);border-right:1px solid var(--line);padding:12px 10px;overflow:auto}
+nav .grp{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin:14px 10px 6px}
+nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--text);text-decoration:none;font-weight:500}
+nav a:hover{background:var(--band)}
+nav a.active{background:var(--btn);color:var(--btn-t)}
+nav a.locked{opacity:.4}
+nav a .tag{margin-left:auto;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px;background:var(--red-l);color:var(--red)}
+nav .ag{font-family:Consolas,"Courier New",monospace;font-size:11px;color:var(--accent-d);font-weight:700;width:22px}
+nav a.active .ag{color:var(--accent)}
+.navmask{display:none}
+main{overflow:auto;padding:22px 26px 40px}
+.view{display:none}.view.on{display:block}
+h1{font-size:24px;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 16px;max-width:1000px}
+h2{font-size:16px;margin:0 0 10px}
+h3{font-size:14px;margin:0 0 8px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
+.g-map{grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;box-shadow:var(--shadow);min-width:0}
+.card.dark{background:var(--head);color:var(--head-text);border-color:var(--head)}
+.card.dark .muted{color:var(--head-sub)}
+.kpi .v{font-size:28px;font-weight:800;line-height:1.1}
+.kpi .l{color:var(--muted);font-size:12.5px;margin-top:4px}
+.muted{color:var(--muted)}.small{font-size:12.5px}.mono{font-family:Consolas,"Courier New",monospace}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--btn);background:var(--btn);color:var(--btn-t);border-radius:8px;padding:7px 14px;font-weight:600}
+.btn:hover{background:var(--btn-h)}
+.btn.sec{background:var(--surface);color:var(--text);border-color:var(--line)}.btn.sec:hover{background:var(--band)}
+.btn.amber{background:var(--accent);border-color:var(--accent);color:#0F1E2E}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.btn.red{background:var(--surface);color:var(--red);border-color:var(--red-l)}
+.btn:disabled,.btn.nope{opacity:.42;cursor:not-allowed}
+.btn.sm{padding:4px 10px;font-size:12.5px}
+table{border-collapse:collapse;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:700;background:var(--surface2);position:sticky;top:0;z-index:1}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+td.c,th.c{text-align:center}
+tr.sel td{background:var(--sel)}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--hover)}
+.scroll{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+.hscroll{overflow-x:auto}
+textarea{width:100%;min-height:150px;border:1px solid var(--line);border-radius:8px;padding:8px;font-family:Consolas,"Courier New",monospace;font-size:12px;background:var(--ta)}
+textarea[readonly]{opacity:.85}
+input[type=number],input[type=text],input[type=date],select{border:1px solid var(--line);border-radius:7px;padding:6px 8px;background:var(--input)}
+input[type=file]{max-width:100%;color:var(--muted)}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted);font-weight:600}
+.pipe{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.step{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px;min-height:120px}
+.step .n{font-family:Consolas,monospace;font-size:11px;font-weight:700;color:var(--accent-d)}
+.step .t{font-weight:700;margin:2px 0 4px}.step .s{font-size:12px;color:var(--muted)}
+.step.run{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-l)}
+.step.done{border-color:var(--ok)}
+.step.human{background:var(--head);color:var(--head-text);border-color:var(--head)}.step.human .s{color:var(--head-sub)}.step.human .n{color:var(--accent)}
+.log{background:var(--log);color:var(--log-t);border-radius:10px;padding:12px;font-family:Consolas,"Courier New",monospace;font-size:12px;height:300px;overflow:auto}
+.log .a1{color:#7FD1C7}.log .a2{color:#F2C46D}.log .a3{color:#9EC3FF}.log .a4{color:#F49C8E}.log .a0{color:#E8E8E8}.log .h{color:#FFD58A;font-weight:700}.log .x{color:#FF8A80;font-weight:700}
+.issue{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:8px;background:var(--surface)}
+.issue.loi{border-left-color:var(--red)}.issue.canh_bao{border-left-color:var(--accent)}.issue.thong_tin{border-left-color:var(--teal)}
+.issue .m{font-weight:600}.issue .b{font-size:12px;color:var(--muted);margin-top:3px}
+.bar{height:8px;background:var(--band);border-radius:999px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--teal)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:5px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid rgba(0,0,0,.15)}
+#map svg{width:100%;height:auto;max-height:640px;background:var(--m-bg);border:1px solid var(--line);border-radius:10px;display:block;touch-action:manipulation}
+.p-ok{fill:var(--m-ok)}.p-canh_bao{fill:var(--m-warn)}.p-loi{fill:var(--m-err)}
+.note{background:var(--accent-l);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--warn-t)}
+.note.teal{background:var(--teal-l);color:var(--teal)}
+.modal-bg{position:fixed;inset:0;background:rgba(8,17,26,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:12px}
+.modal-bg.on{display:flex}
+.modal{background:var(--surface);border-radius:12px;width:min(880px,100%);max-height:90vh;display:flex;flex-direction:column}
+.modal .hd{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.modal .bd{padding:14px 18px;overflow:auto}
+.modal .ft{padding:12px 18px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.score{font-size:40px;font-weight:800}
+.pill{display:inline-block;border-radius:6px;padding:1px 7px;font-size:11.5px;font-weight:700}
+.kb{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--surface);margin-bottom:8px}.kb .t{font-weight:700}
+.toast{position:fixed;right:18px;bottom:18px;background:var(--btn);color:var(--btn-t);padding:10px 14px;border-radius:8px;opacity:0;transition:opacity .25s;z-index:60;max-width:min(440px,90vw);pointer-events:none}
+.toast.on{opacity:1}
+.hash{font-family:Consolas,monospace;font-size:11px;color:var(--muted);word-break:break-all}
+.sheet{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--surface)}
+.sheet.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-l)}
+.perm-on{color:var(--ok);font-weight:700}.perm-off{color:var(--muted)}
+.cb{width:18px;height:18px;accent-color:var(--teal)}
+.lockline{font-size:12px;color:var(--muted)}
+/* ---------- responsive ---------- */
+@media (max-width:1180px){.g4,.g5{grid-template-columns:repeat(2,1fr)}.g-map,.g2,.g3{grid-template-columns:1fr}.pipe{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  header{grid-column:1}
+  #navBtn{display:inline-block}
+  .sub{display:none}
+  nav{position:fixed;top:0;left:0;bottom:0;width:260px;z-index:40;transform:translateX(-105%);transition:transform .2s;box-shadow:4px 0 18px rgba(0,0,0,.25)}
+  .app.navopen nav{transform:none}
+  .app.navopen .navmask{display:block;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:39}
+  main{padding:14px 12px 40px}
+  h1{font-size:20px}
+  .g4,.g5{grid-template-columns:1fr 1fr}
+  .pipe{grid-template-columns:1fr 1fr}
+  .kpi .v{font-size:22px}
+  .hdr-right select{max-width:150px}
+  .hdr-right{gap:6px}
+  .hide-sm{display:none}
+}
+@media (max-width:480px){.g4,.g5{grid-template-columns:1fr}.pipe{grid-template-columns:1fr}.logo .pl{display:none}}
+/* ---------- đăng nhập ---------- */
+#login{position:fixed;inset:0;z-index:80;background:var(--bg);display:none;overflow:auto}
+#login.on{display:block}
+body.locked .app{visibility:hidden}
+.lg-wrap{min-height:100%;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)}
+.lg-brand{background:var(--head);color:var(--head-text);padding:40px 44px;display:flex;flex-direction:column;gap:18px}
+.lg-brand h1{color:var(--head-text);font-size:28px;line-height:1.2;margin:6px 0 0}
+.lg-brand .lead{color:var(--head-sub);margin:0}
+.lg-roles{display:grid;gap:10px}
+.lg-role{background:var(--head-chip);border-radius:10px;padding:12px 14px}
+.lg-role .t{display:flex;align-items:center;gap:8px;font-weight:700}
+.lg-role ul{margin:6px 0 0;padding-left:18px;color:var(--head-sub);font-size:12.5px}
+.lg-role li b{color:var(--head-text);font-weight:600}
+.lg-form{padding:40px 44px;display:flex;flex-direction:column;justify-content:center;gap:14px;max-width:520px;width:100%;margin:0 auto}
+.lg-form h2{font-size:22px;margin:0}
+.lg-form label{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:13px}
+.lg-form input{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--input);font-size:15px}
+.lg-form input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.pwbox{position:relative}.pwbox input{width:100%;padding-right:64px}
+.pwbox button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:none;background:transparent;color:var(--teal);font-weight:600;font-size:12.5px}
+.lg-err{background:var(--red-l);color:var(--red);border-radius:8px;padding:9px 12px;font-size:13px;display:none}
+.lg-err.on{display:block}
+.lg-btn{padding:11px 14px;font-size:15px}
+.demo-acc{display:grid;gap:6px}
+.demo-acc button{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px}
+.demo-acc button:hover{background:var(--hover)}
+.demo-acc .u{font-family:Consolas,"Courier New",monospace;font-weight:700;min-width:62px}
+.demo-acc .d{color:var(--muted);font-size:12.5px;flex:1}
+.demo-acc .lk{font-size:11px}
+.lg-note{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.lg-theme{position:absolute;right:14px;top:12px}
+@media (max-width:860px){.lg-wrap{grid-template-columns:1fr}.lg-brand{order:2;padding:24px 18px}.lg-form{padding:28px 18px 22px}}
+/* menu người dùng */
+.umenu{position:relative}
+.ubtn{display:flex;align-items:center;gap:8px;background:var(--head-chip);color:var(--head-text);border:none;border-radius:8px;padding:4px 10px;height:32px;max-width:260px}
+.ubtn .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.udrop{position:absolute;right:0;top:38px;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:10px;width:290px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:none;z-index:40}
+.udrop.on{display:block}
+.udrop .hd{padding:12px 14px;border-bottom:1px solid var(--line)}
+.udrop .it{display:block;width:100%;text-align:left;background:none;border:none;padding:10px 14px}
+.udrop .it:hover{background:var(--hover)}
+.udrop .it.dng{color:var(--red);font-weight:600}
+@media (max-width:480px){.ubtn .nm{display:none}}
+/* đơn vị thiết kế */
+nav{display:flex;flex-direction:column}
+.designer{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:18px 4px 4px;background:var(--surface2)}
+nav .designer{margin-top:auto}
+.designer:hover{border-color:var(--teal)}
+.designer img{flex:none;border-radius:8px}
+.designer span{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.designer .dl{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.designer b{font-size:13px}
+.designer .du{font-size:11.5px;color:var(--teal);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.designer.on-dark{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:var(--head-text);margin:auto 0 0;align-self:flex-start}
+.designer.on-dark .dl{color:var(--head-sub)}.designer.on-dark .du{color:#7FD6D0}
+.designer.on-dark:hover{border-color:#7FD6D0}
+/* nút đăng xuất luôn hiển thị */
+.logoutbtn{display:flex;align-items:center;gap:6px;height:32px;border-radius:8px;border:1px solid rgba(240,140,127,.55);background:transparent;color:#F5B3A9;padding:0 12px;font-weight:600}
+.logoutbtn:hover{background:var(--red);border-color:var(--red);color:#fff}
+@media (max-width:480px){.logoutbtn{padding:0 10px}.logoutbtn .lt{display:none}}
+</style>
+</head>
+<body class="locked">
+<div id="login" class="on" role="dialog" aria-modal="true" aria-labelledby="lgTitle">
+  <button class="iconbtn lg-theme" aria-label="Đổi giao diện sáng/tối" onclick="toggleTheme()" id="lgTheme">☾</button>
+  <div class="lg-wrap">
+    <section class="lg-brand">
+      <div class="logo"><svg width="30" height="30" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="none" stroke="#E8A33D" stroke-width="2"/><circle cx="13" cy="13" r="3" fill="#E8A33D"/><path d="M13 1v6M13 19v6M1 13h6M19 13h6" stroke="#E8A33D" stroke-width="2"/></svg> GeoAgent <span style="font-weight:400;color:var(--head-sub)">Pilot</span></div>
+      <div><h1>Agentic AI cho đo đạc &amp; CSDL địa chính</h1><p class="lead">Công ty Phước Thịnh · Gói 01 · Mỗi tài khoản chỉ thấy và làm được đúng phần việc của vai trò. Mọi thao tác, kể cả bị từ chối, đều ghi vào nhật ký móc xích SHA-256.</p></div>
+      <div class="lg-roles" id="lgRoles"></div>
+      <a class="designer on-dark" href="https://htsolutiontech.github.io/AIConsulting/" target="_blank" rel="noopener" title="Mở trang Mr Thuong AgenticAI"><img src="data:image/png;base64,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" alt="Logo Mr Thuong AgenticAI" width="44" height="44"><span><span class="dl">Thiết kế &amp; phát triển</span><b>Mr Thuong AgenticAI</b><span class="du">htsolutiontech.github.io/AIConsulting</span></span></a>
+    </section>
+    <section class="lg-form">
+      <div><div class="small muted">Đăng nhập hệ thống</div><h2 id="lgTitle">Chào mừng trở lại</h2></div>
+      <form id="lgForm" onsubmit="event.preventDefault(); doLogin();" autocomplete="on">
+        <div style="display:grid;gap:12px">
+          <label>Tên đăng nhập<input id="lgUser" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+          <label>Mật khẩu<div class="pwbox"><input id="lgPw" name="password" type="password" autocomplete="current-password" required><button type="button" onclick="togglePw('lgPw', this)">Hiện</button></div></label>
+          <div class="lg-err" id="lgErr" role="alert"></div>
+          <button class="btn lg-btn" type="submit" id="lgBtn">Đăng nhập</button>
+        </div>
+      </form>
+      <div>
+        <div class="row" style="justify-content:space-between;margin-bottom:6px"><b style="font-size:13px">Tài khoản demo</b><span class="chip warn">chỉ dùng thử</span></div>
+        <div class="demo-acc" id="demoAcc"></div>
+      </div>
+      <div class="lg-note">Bản pilot xác thực ngay trên trình duyệt để trình diễn. Khi vận hành thật, đăng nhập đi qua GeoAgent API (mật khẩu băm scrypt, JWT, khóa sau 5 lần sai), có thể nối SSO/LDAP. Quyền được kiểm ở máy chủ, không dựa vào giao diện. Phiên tự đăng xuất sau 15 phút không thao tác.</div>
+    </section>
+  </div>
+</div>
+<div class="modal-bg" id="pwModal"><div class="modal" style="width:min(440px,100%)"><div class="hd"><b id="pwTitle">Đổi mật khẩu</b></div><div class="bd">
+  <p class="small muted" id="pwSub" style="margin-top:0"></p>
+  <div style="display:grid;gap:10px" class="lg-form" >
+    <label>Mật khẩu hiện tại<input type="password" id="pwOld" autocomplete="current-password"></label>
+    <label>Mật khẩu mới<input type="password" id="pwNew" autocomplete="new-password"></label>
+    <label>Nhập lại mật khẩu mới<input type="password" id="pwNew2" autocomplete="new-password"></label>
+    <div class="small muted">Tối thiểu 10 ký tự, có chữ hoa, chữ thường và chữ số.</div>
+    <div class="lg-err" id="pwErr"></div>
+    <div class="row"><button class="btn" onclick="doChangePw()">Lưu mật khẩu</button><button class="btn sec" id="pwCancel" onclick="closePwModal()">Hủy</button></div>
+  </div></div></div></div>
+<div class="app" id="app">
+<header>
+  <button class="iconbtn" id="navBtn" aria-label="Mở menu" onclick="toggleNav()">☰</button>
+  <div class="logo">
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="none" stroke="#E8A33D" stroke-width="2"/><circle cx="13" cy="13" r="3" fill="#E8A33D"/><path d="M13 1v6M13 19v6M1 13h6M19 13h6" stroke="#E8A33D" stroke-width="2"/></svg>
+    GeoAgent <span class="pl" style="font-weight:400;color:var(--head-sub)">Pilot</span>
+  </div>
+  <div class="sub">Công ty Phước Thịnh · Gói 01 · Xã thí điểm A · <b style="color:#E8A33D">dữ liệu tổng hợp</b></div>
+  <div class="hdr-right">
+    <select id="sheetSel" aria-label="Chọn tờ bản đồ" onchange="switchSheet(this.value)"></select>
+    <span class="chip dark hide-sm" id="hdrStatus">Chưa chạy</span>
+    <div class="umenu">
+      <button class="ubtn" id="userBtn" aria-haspopup="true" aria-expanded="false" onclick="toggleUserMenu()"><span class="chip" id="roleChip"></span><span class="nm" id="userName"></span><span aria-hidden="true">▾</span></button>
+      <div class="udrop" id="userDrop" role="menu">
+        <div class="hd"><b id="udName"></b><div class="small muted" id="udTitle"></div><div class="small" id="udPerms" style="margin-top:6px"></div><div class="small muted" id="udSess" style="margin-top:4px"></div></div>
+        <button class="it" role="menuitem" onclick="toggleUserMenu(false); location.hash='tai-khoan'">Quyền của tôi &amp; tài khoản</button>
+        <button class="it" role="menuitem" onclick="toggleUserMenu(false); openPwModal(false)">Đổi mật khẩu</button>
+        <button class="it dng" role="menuitem" onclick="logout('Đăng xuất')">Đăng xuất</button>
+      </div>
+    </div>
+    <button class="iconbtn" id="themeBtn" aria-label="Đổi giao diện sáng/tối" onclick="toggleTheme()">☾</button>
+    <button class="logoutbtn" onclick="logout('Đăng xuất')" title="Đăng xuất khỏi hệ thống"><span aria-hidden="true">⎋</span><span class="lt">Đăng xuất</span></button>
+  </div>
+</header>
+
+<nav id="nav">
+  <div class="grp">Điều hành</div>
+  <a href="#tong-quan" data-v="tong-quan"><span class="ag">▣</span>Tổng quan CEO</a>
+  <a href="#dieu-phoi" data-v="dieu-phoi"><span class="ag">00</span>Điều phối & chạy</a>
+  <div class="grp">Tác tử</div>
+  <a href="#khong-gian" data-v="khong-gian"><span class="ag">01</span>Không gian</a>
+  <a href="#phap-ly" data-v="phap-ly"><span class="ag">02</span>Pháp lý & Quy hoạch</a>
+  <a href="#csdl" data-v="csdl"><span class="ag">03</span>CSDL Địa chính</a>
+  <a href="#qa" data-v="qa"><span class="ag">04</span>Vận hành & QA</a>
+  <div class="grp">Kiểm soát</div>
+  <a href="#duyet" data-v="duyet"><span class="ag">✓</span>Hàng đợi duyệt<span class="tag" id="qCount" style="display:none">0</span></a>
+  <a href="#so-tay" data-v="so-tay"><span class="ag">↺</span>Sổ tay lỗi → quy tắc</a>
+  <a href="#nhat-ky" data-v="nhat-ky"><span class="ag">#</span>Nhật ký kiểm toán</a>
+  <a href="#du-lieu" data-v="du-lieu"><span class="ag">⇪</span>Dữ liệu tờ bản đồ</a>
+  <div class="grp">Hệ thống</div>
+  <a href="#tai-khoan" data-v="tai-khoan"><span class="ag">◎</span>Tài khoản & phân quyền</a>
+  <a href="#cai-dat" data-v="cai-dat"><span class="ag">⚙</span>Cấu hình</a>
+  <a class="designer" href="https://htsolutiontech.github.io/AIConsulting/" target="_blank" rel="noopener" title="Mở trang Mr Thuong AgenticAI"><img src="data:image/png;base64,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" alt="Logo Mr Thuong AgenticAI" width="36" height="36"><span><span class="dl">Thiết kế &amp; phát triển</span><b>Mr Thuong AgenticAI</b><span class="du">AI Consulting ↗</span></span></a>
+</nav>
+<div class="navmask" onclick="toggleNav(false)"></div>
+
+<main>
+<!-- ============ TỔNG QUAN ============ -->
+<section class="view" id="v-tong-quan">
+  <h1>Tổng quan cho Ban Giám đốc</h1>
+  <p class="lead">Chất lượng sản phẩm sau đo của tờ đang mở, khối lượng việc GeoAgent làm thay kỹ sư, và tiến độ các tờ trong gói thầu. Con số thời gian dựa trên baseline nhập ở mục Vận hành & QA.</p>
+  <div id="ovEmpty" class="card" style="margin-bottom:14px"><div class="row"><div><b>Tờ này chưa chạy.</b> <span class="muted">GeoAgent sẽ chạy 4 tác tử trên tờ bản đồ đang chọn.</span></div><button class="btn amber" data-perm="run" onclick="runPipeline(true)">▶ Chạy GeoAgent</button></div></div>
+  <div class="grid g5" id="ovKpi"></div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card"><h2>Chất lượng sản phẩm sau đo — “Đúng · Đủ · Sạch · Sống”</h2><div id="ovQuality"></div></div>
+    <div class="card"><h2>Lỗi GeoAgent bắt được trước khi nộp</h2><div id="ovIssues"></div></div>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card"><h2>Tiến độ gói thầu theo tờ bản đồ</h2><div class="hscroll" id="ovPkg"></div></div>
+    <div class="card dark"><h2>Năng lực nhân sự</h2><div id="ovCap"></div></div>
+  </div>
+</section>
+
+<!-- ============ ĐIỀU PHỐI ============ -->
+<section class="view" id="v-dieu-phoi">
+  <h1>Tác tử Điều phối</h1>
+  <p class="lead">Nhận tờ bản đồ, chia việc cho 4 tác tử, dừng ở các cổng phê duyệt của con người. Dữ liệu đi một lần qua mọi công đoạn — không nhập lại.</p>
+  <div class="row" style="margin-bottom:12px">
+    <button class="btn amber" data-perm="run" onclick="runPipeline(true)">▶ Chạy toàn bộ quy trình</button>
+    <button class="btn sec" data-perm="data.edit" onclick="resetSheet()">↺ Nạp lại dữ liệu gốc của tờ</button>
+    <span class="muted small" id="runInfo"></span>
+  </div>
+  <div class="pipe" id="pipe"></div>
+  <div class="grid g2" style="margin-top:14px">
+    <div><h2>Nhật ký điều phối</h2><div class="log" id="log"></div></div>
+    <div class="card">
+      <h2>Cổng phê duyệt & ký nộp</h2>
+      <div id="gates"></div>
+      <hr style="border:none;border-top:1px solid var(--line);margin:14px 0">
+      <h3>Cổng 3 · Kỹ sư ký và xuất gói hồ sơ</h3>
+      <div class="small muted" style="margin-bottom:8px">Chỉ mở khi không còn lỗi chặn, mọi đề xuất đã được quyết định, và người dùng có quyền “Ký”. GeoAgent không tự nộp hồ sơ.</div>
+      <div class="row">
+        <input type="text" id="signName" placeholder="Họ tên kỹ sư ký" style="flex:1;min-width:160px" data-perm="sign">
+        <label class="small"><input type="checkbox" id="signChk" data-perm="sign"> Tôi đã kiểm tra mẫu và chịu trách nhiệm kết quả</label>
+      </div>
+      <div class="row" style="margin-top:8px"><button class="btn" id="signBtn" onclick="signOff()" disabled>Ký và xuất gói hồ sơ</button><span class="small" id="signWhy"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AGENT 01 ============ -->
+<section class="view" id="v-khong-gian">
+  <h1>Tác tử 01 · Xử lý dữ liệu không gian</h1>
+  <p class="lead">Đọc số liệu thô, kiểm tra hệ tọa độ VN-2000, dựng thửa, kiểm topology và tính diện tích bằng thuật toán xác định (không dùng mô hình ngôn ngữ). Chạm vào thửa để xem chi tiết.</p>
+  <div class="grid g-map">
+    <div class="card" style="padding:12px">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <div class="legend">
+          <span><i class="sw" style="background:var(--m-ok)"></i>Đạt</span><span><i class="sw" style="background:var(--m-warn)"></i>Cảnh báo</span><span><i class="sw" style="background:var(--m-err)"></i>Lỗi</span>
+          <span><i class="sw" style="background:rgba(180,55,43,.18);border-color:#B4372B"></i>HL giao thông</span><span><i class="sw" style="background:rgba(46,125,79,.2);border-color:#2E7D4F"></i>Đất rừng</span>
+          <span><i class="sw" style="background:rgba(232,163,61,.25);border-color:#C98318"></i>Chỉ giới QH</span><span><i class="sw" style="background:rgba(43,95,168,.18);border-color:#2B5FA8"></i>HL lưới điện</span><span><i class="sw" style="background:rgba(32,150,180,.2);border-color:#1B8BA6"></i>HL thủy lợi</span>
+        </div>
+        <label class="small"><input type="checkbox" id="showPlan" checked onchange="drawMap()"> Lớp quy hoạch</label>
+      </div>
+      <div id="map"></div>
+      <div class="small muted" style="margin-top:6px">Trục ngang: Y (Đông), trục dọc: X (Bắc) — quy ước VN-2000. Nhãn = mã thửa.</div>
+    </div>
+    <div class="card" id="parcelPanel"><h2>Chi tiết thửa</h2><div class="muted">Chọn một thửa trên bản đồ hoặc trong bảng.</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card"><h2>Kiểm tra số liệu điểm & hệ tọa độ</h2><div id="a1Points"></div></div>
+    <div class="card"><h2>Bảng thửa (diện tích tính lại 100%)</h2><div class="scroll" id="a1Table"></div></div>
+  </div>
+</section>
+
+<!-- ============ AGENT 02 ============ -->
+<section class="view" id="v-phap-ly">
+  <h1>Tác tử 02 · Pháp lý & Quy hoạch</h1>
+  <p class="lead">Chồng lớp thửa với quy hoạch, chấm điểm nguy cơ bị trả hồ sơ trước khi nộp, và tra cứu căn cứ theo ngày hiệu lực. Tác tử chỉ cảnh báo, không kết luận thay cơ quan nhà nước.</p>
+  <div class="grid g2">
+    <div class="card"><h2>Kiểm tra trước khi nộp (pre-flight) theo thửa</h2><div class="small muted" style="margin-bottom:8px" id="pfFormula"></div><div class="scroll" id="pfTable" style="max-height:470px"></div></div>
+    <div>
+      <div class="card"><h2>Xung đột quy hoạch phát hiện</h2><div id="planList"></div></div>
+      <div class="card" style="margin-top:14px">
+        <h2>Tra cứu căn cứ theo ngày hiệu lực</h2>
+        <div class="row" style="margin-bottom:8px">
+          <label class="f">Tại ngày<input type="date" id="kbDate" onchange="renderKB()"></label>
+          <label class="f" style="flex:1;min-width:200px">Câu hỏi<input type="text" id="kbQ" placeholder="VD: mã định danh thửa đất, lồng ghép, kỹ thuật đo đạc" onkeydown="if(event.key==='Enter')askKB()"></label>
+          <button class="btn sm" style="align-self:flex-end" onclick="askKB()">Hỏi</button>
+        </div>
+        <div id="kbAns"></div>
+        <details style="margin-top:8px"><summary class="small" style="cursor:pointer">Kho tri thức (<span id="kbN"></span> văn bản) — trạng thái tại ngày đã chọn</summary><div id="kbList" style="margin-top:8px"></div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AGENT 03 ============ -->
+<section class="view" id="v-csdl">
+  <h1>Tác tử 03 · Quản trị CSDL địa chính</h1>
+  <p class="lead">Chuẩn hóa thuộc tính, đối soát với dữ liệu không gian, tạo mã thửa tạm, phát hiện bất thường và đóng gói dữ liệu giao nộp. Đối soát chỉ trên dữ liệu do chủ đầu tư cung cấp.</p>
+  <div class="grid g4" id="a3Score"></div>
+  <div class="card" style="margin-top:14px">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <h2 style="margin:0">Bảng thuộc tính đã đối soát</h2>
+      <div class="row"><button class="btn sec sm" data-perm="export" onclick="exportFile('geojson')">Xuất GeoJSON</button><button class="btn sec sm" data-perm="export" onclick="exportFile('csv')">Xuất CSV thuộc tính</button></div>
+    </div>
+    <div class="scroll" id="a3Table" style="max-height:480px"></div>
+    <div class="small muted" style="margin-top:6px">Mã thửa tạm = mã xã + tờ + số thửa + trọng tâm làm tròn (m). Cấu trúc mã định danh chính thức theo TT 19/2026/TT-BNNMT cần cấu hình lại khi có hướng dẫn chi tiết của địa phương.</div>
+  </div>
+</section>
+
+<!-- ============ AGENT 04 ============ -->
+<section class="view" id="v-qa">
+  <h1>Tác tử 04 · Vận hành & Quản lý chất lượng</h1>
+  <p class="lead">Kiểm tra nghiệm thu nội bộ tự động, biên bản kiểm tra, và thời gian tiết kiệm so với baseline của chính công ty.</p>
+  <div class="grid g2">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px"><h2 style="margin:0">Bảng kiểm KTNT nội bộ</h2><button class="btn sec sm" data-perm="export" onclick="exportFile('bienban')">Xuất biên bản kiểm tra</button></div>
+      <div id="qaCheck"></div>
+    </div>
+    <div class="card">
+      <h2>Thời gian back-office: baseline so với GeoAgent</h2>
+      <div class="small muted" style="margin-bottom:8px">Nhập phút/thửa đo được ở Giai đoạn 0. Số mặc định là <b>giả định ví dụ</b>; tỷ lệ tự động hóa lấy từ bộ slide (giả thuyết thiết kế).</div>
+      <div class="hscroll" id="tsForm"></div>
+      <div id="tsOut" style="margin-top:10px"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DUYỆT ============ -->
+<section class="view" id="v-duyet">
+  <h1>Hàng đợi duyệt (con người quyết định)</h1>
+  <p class="lead">Mọi sửa đổi GeoAgent đề xuất nằm ở đây. Chỉ khi người có quyền duyệt, thay đổi mới được áp dụng và các tác tử chạy lại. Mỗi quyết định được ghi vào nhật ký kiểm toán kèm tên và vai trò người duyệt.</p>
+  <div class="row" style="margin-bottom:10px"><button class="btn sec sm" id="bulkBtn" onclick="approveAllSafe()">Duyệt hàng loạt các đề xuất rủi ro thấp</button><span class="small muted" id="bulkNote"></span></div>
+  <div id="queue"></div>
+</section>
+
+<!-- ============ SỔ TAY ============ -->
+<section class="view" id="v-so-tay">
+  <h1>Sổ tay lỗi → quy tắc kiểm tra mới</h1>
+  <p class="lead">Mỗi lần hồ sơ bị trả, ghi lý do và biến nó thành quy tắc. Quy tắc áp dụng cho <b>mọi tờ bản đồ</b> ở lần chạy sau — lỗi đó không lặp lại.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h2>Ghi nhận lần trả hồ sơ mới</h2>
+      <label class="f">Lý do bị trả (theo văn bản trả lời của VPĐKĐĐ)<input type="text" id="rlReason" placeholder="VD: Thửa nhỏ hơn diện tích tối thiểu được tách" data-perm="rules"></label>
+      <div class="row" style="margin-top:8px">
+        <label class="f">Loại quy tắc
+          <select id="rlType" onchange="rlTypeChange()" data-perm="rules">
+            <option value="required_doc">Thành phần hồ sơ bắt buộc</option>
+            <option value="required_field">Trường thuộc tính bắt buộc</option>
+            <option value="min_area">Diện tích tối thiểu thửa (m²)</option>
+          </select></label>
+        <label class="f">Giá trị<span id="rlValWrap"></span></label>
+      </div>
+      <div class="row" style="margin-top:10px"><button class="btn" data-perm="rules" onclick="addRule()">Tạo quy tắc & chạy lại</button></div>
+    </div>
+    <div class="card"><h2>Quy tắc đang áp dụng</h2><div id="ruleList"></div></div>
+  </div>
+</section>
+
+<!-- ============ NHẬT KÝ ============ -->
+<section class="view" id="v-nhat-ky">
+  <h1>Nhật ký kiểm toán</h1>
+  <p class="lead">Ghi chỉ thêm, móc xích bằng hàm băm SHA-256: sửa một dòng cũ sẽ làm hỏng chuỗi. Ghi cả các lần bị từ chối truy cập. Bản triển khai thật lưu trên máy chủ nội bộ của công ty.</p>
+  <div class="row" style="margin-bottom:10px"><button class="btn sec sm" onclick="verifyChain()">Kiểm tra toàn vẹn chuỗi</button><span id="chainRes" class="small"></span></div>
+  <div class="card" style="padding:0"><div class="scroll" id="audit" style="max-height:620px;border:none"></div></div>
+</section>
+
+<!-- ============ DỮ LIỆU ============ -->
+<section class="view" id="v-du-lieu">
+  <h1>Dữ liệu tờ bản đồ</h1>
+  <p class="lead">Thư viện tờ bản đồ của gói thầu. Mỗi tờ gồm 3 tệp CSV theo cấu trúc bên dưới. Dữ liệu mẫu là <b>tổng hợp</b> và có lỗi cài sẵn (trừ Tờ 14 — đối chứng sạch).</p>
+  <div class="grid g4" id="sheetLib"></div>
+  <div class="card" style="margin-top:14px">
+    <h2>Cấu trúc dữ liệu một tờ bản đồ</h2>
+    <div class="note teal" style="margin-bottom:10px">Quy ước chung: mã hóa <b>UTF-8</b> · phân tách cột bằng <b>dấu phẩy</b> · dấu <b>chấm</b> thập phân · không dùng dấu phẩy trong giá trị · dòng bắt đầu bằng <span class="mono">#</span> là siêu dữ liệu. Ba tệp liên kết qua <b>tên điểm</b> (tệp 1 ↔ tệp 2) và <b>mã thửa</b> (tệp 2 ↔ tệp 3).</div>
+    <div class="grid g3">
+      <div class="hscroll"><h3>Tệp 1 · Điểm đo <span class="mono small muted">diem_do_toXX.csv</span></h3>
+        <table class="small"><tr><th>Trường</th><th>Nội dung</th></tr>
+        <tr><td class="mono">#HE_TOA_DO</td><td>Hệ tọa độ: <span class="mono">VN2000</span></td></tr>
+        <tr><td class="mono">#KTT</td><td>Kinh tuyến trục, độ thập phân (<span class="mono">107.00</span> = 107°00′)</td></tr>
+        <tr><td class="mono">#MUI · TO · NGAY_DO · NGUON</td><td>Múi chiếu (3), số tờ, ngày đo, thiết bị/nguồn</td></tr>
+        <tr><td class="mono">TEN</td><td>Tên điểm, duy nhất trong tờ, không dấu cách</td></tr>
+        <tr><td class="mono">X</td><td>Tọa độ Bắc (m), 3 số lẻ</td></tr>
+        <tr><td class="mono">Y</td><td>Tọa độ Đông (m), đã cộng 500.000, 3 số lẻ</td></tr>
+        <tr><td class="mono">H</td><td>Cao độ (m), được để trống</td></tr>
+        <tr><td class="mono">MA</td><td>GT góc thửa · CT chi tiết · KC khống chế · GPS</td></tr></table></div>
+      <div class="hscroll"><h3>Tệp 2 · Thửa <span class="mono small muted">thua_toXX.csv</span></h3>
+        <table class="small"><tr><th>Trường</th><th>Nội dung</th></tr>
+        <tr><td class="mono">THUA</td><td>Mã thửa trong tờ — khóa liên kết với tệp 3</td></tr>
+        <tr><td class="mono">DIEM</td><td>Tên điểm góc theo thứ tự đi vòng quanh thửa, cách nhau bởi <span class="mono">|</span>; không lặp điểm đầu ở cuối</td></tr></table>
+        <div class="small muted" style="margin-top:8px">Hai thửa liền kề phải dùng <b>cùng tên điểm</b> cho đỉnh chung — điều kiện để kiểm topology. Thửa có từ 3 đỉnh trở lên.</div></div>
+      <div class="hscroll"><h3>Tệp 3 · Thuộc tính <span class="mono small muted">thuoc_tinh_toXX.csv</span></h3>
+        <table class="small"><tr><th>Trường</th><th>Nội dung</th></tr>
+        <tr><td class="mono">THUA</td><td>Mã thửa, khớp tệp 2</td></tr>
+        <tr><td class="mono">TO · SO_THUA</td><td>Số tờ, số thửa (duy nhất trong tờ)</td></tr>
+        <tr><td class="mono">DT_PHAP_LY</td><td>Diện tích trên GCN (m²); trống nếu đăng ký lần đầu</td></tr>
+        <tr><td class="mono">LOAI_DAT</td><td>Mã loại đất (ONT, CLN, LUC, BHK, NTS…)</td></tr>
+        <tr><td class="mono">CHU_SD · SO_GCN</td><td>Chủ sử dụng, số phát hành GCN</td></tr>
+        <tr><td class="mono">THANH_PHAN</td><td>Mã thành phần hồ sơ cách nhau bởi <span class="mono">;</span> — TD trích đo · BBMG biên bản ranh giới, mốc giới · BTD bảng tọa độ · DDK đơn đăng ký · NG giấy tờ nguồn gốc</td></tr></table></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px"><h2 style="margin:0" id="editTitle">Dữ liệu tờ đang mở</h2><span class="small" id="editPerm"></span></div>
+    <div class="grid g3">
+      <div><h3>Điểm đo <span class="muted small">TEN,X,Y,H,MA</span></h3><input type="file" accept=".csv,.txt" data-perm="data.edit" onchange="loadFile(event,'pts')"><textarea id="tPts" data-perm="data.edit" style="min-height:300px;margin-top:6px"></textarea></div>
+      <div><h3>Thửa <span class="muted small">THUA,DIEM</span></h3><input type="file" accept=".csv,.txt" data-perm="data.edit" onchange="loadFile(event,'par')"><textarea id="tPar" data-perm="data.edit" style="min-height:300px;margin-top:6px"></textarea></div>
+      <div><h3>Thuộc tính <span class="muted small">THUA,TO,SO_THUA,…</span></h3><input type="file" accept=".csv,.txt" data-perm="data.edit" onchange="loadFile(event,'att')"><textarea id="tAtt" data-perm="data.edit" style="min-height:300px;margin-top:6px"></textarea></div>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="btn amber" data-perm="run" onclick="runPipeline(true)">▶ Chạy GeoAgent với dữ liệu này</button><button class="btn sec" data-perm="data.edit" onclick="resetSheet()">Nạp lại dữ liệu gốc của tờ</button></div>
+  </div>
+</section>
+
+<!-- ============ TÀI KHOẢN ============ -->
+<section class="view" id="v-tai-khoan">
+  <h1>Tài khoản & phân quyền (RBAC)</h1>
+  <p class="lead">Ba vai trò: <b>Admin</b> quản trị hệ thống nhưng không chạm dữ liệu nghiệp vụ · <b>CEO</b> toàn quyền, kể cả thay đổi dữ liệu và phân quyền · <b>Staff</b> chỉ làm được việc CEO cấp trong ma trận dưới đây.</p>
+  <div class="note" style="margin-bottom:14px">Bản pilot đăng nhập và kiểm quyền ngay trên trình duyệt để trình diễn luồng nghiệp vụ (mật khẩu demo công khai, trạng thái lưu cục bộ). Bản vận hành dùng <b>GeoAgent API</b>: mật khẩu băm scrypt, JWT 30 phút, khóa sau 5 lần sai, thu hồi phiên khi đổi mật khẩu/khóa tài khoản, kiểm quyền ở máy chủ cho từng lệnh. Có thể nối SSO/LDAP. Phân quyền ở giao diện chỉ để hiển thị, không phải lớp bảo mật.</div>
+  <div class="grid g3" id="roleCards"></div>
+  <div class="card" style="margin-top:14px">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px"><h2 style="margin:0">Ma trận quyền của Staff</h2><span class="small" id="matrixNote"></span></div>
+    <div class="hscroll" id="permMatrix"></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h2>Tài khoản người dùng</h2>
+    <div class="hscroll" id="userTable"></div>
+    <div class="row" style="margin-top:10px">
+      <input type="text" id="nuUser" placeholder="Tên đăng nhập (vd: ks02)" style="min-width:150px" data-perm="users.accounts" autocapitalize="none">
+      <input type="text" id="nuName" placeholder="Họ tên / mã nhân sự" style="min-width:180px" data-perm="users.accounts">
+      <input type="text" id="nuTitle" placeholder="Chức danh (VD: Kỹ sư trắc địa)" style="min-width:200px" data-perm="users.accounts">
+      <button class="btn sm" data-perm="users.accounts" onclick="addUser()">Thêm tài khoản Staff</button>
+      <span class="small muted">Tài khoản mới nhận mật khẩu tạm (hiện một lần), phải đổi khi đăng nhập lần đầu, và chưa có quyền nào cho đến khi CEO cấp.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CẤU HÌNH ============ -->
+<section class="view" id="v-cai-dat">
+  <h1>Cấu hình hệ thống</h1>
+  <p class="lead">Ngưỡng ở đây là <b>ngưỡng kiểm tra nội bộ</b> của công ty, không thay thế hạn sai trong quy định kỹ thuật. Admin và CEO được sửa; đổi cấu hình sẽ chạy lại tờ đang mở.</p>
+  <div class="card">
+    <div class="grid g4">
+      <label class="f">Hệ tọa độ<select id="cfSys" data-perm="config"><option value="VN2000">VN-2000</option></select></label>
+      <label class="f">Kinh tuyến trục của gói thầu (°)<select id="cfKtt" data-perm="config"></select></label>
+      <label class="f">Mã xã (cho mã thửa tạm)<input type="text" id="cfXa" data-perm="config"></label>
+      <label class="f">Ngưỡng cảnh báo lệch diện tích so với GCN (%)<input type="number" id="cfTol" step="0.5" min="0" data-perm="config"></label>
+      <label class="f">Ngưỡng đề xuất bắt dính đỉnh (m)<input type="number" id="cfSnap" step="0.05" min="0" data-perm="config"></label>
+      <label class="f">Bán kính điểm ngoại lai (m)<input type="number" id="cfOut" step="100" min="100" data-perm="config"></label>
+      <label class="f">Bước lưới tính diện tích giao (m)<input type="number" id="cfGrid" step="0.05" min="0.05" data-perm="config"></label>
+      <label class="f">Diện tích chồng lấn tối thiểu để báo (m²)<input type="number" id="cfOv" step="0.05" min="0" data-perm="config"></label>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="btn" data-perm="config" onclick="saveConfig()">Lưu & chạy lại</button></div>
+    <div class="note" style="margin-top:12px">Danh mục kinh tuyến trục theo tỉnh trong pilot gồm vài giá trị tham khảo; cần cập nhật theo quy định áp dụng cho các tỉnh sau sáp nhập trước khi dùng thật.</div>
+  </div>
+</section>
+</main>
+</div>
+
+<div class="modal-bg" id="modal"><div class="modal"><div class="hd"><b id="mTitle"></b><span class="muted small" id="mSub"></span><button class="btn sec sm" style="margin-left:auto" onclick="closeModal()">Đóng</button></div><div class="bd"><textarea id="mText" style="min-height:340px" readonly></textarea></div><div class="ft"><span class="small muted" id="mNote" style="margin-right:auto"></span><button class="btn sec" onclick="copyModal()">Sao chép</button><button class="btn" id="mSave" onclick="saveModal()">Tải tệp về</button></div></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+"use strict";
+const DATASETS = {"12": {"name": "Tờ 12 · Xã thí điểm A", "desc": "24 thửa lưới đều · 13 lỗi cài sẵn (bộ mẫu ban đầu)", "pts": "#HE_TOA_DO=VN2000;KTT=107.00;MUI=3;NGUON=May toan dac TS-xx (gia lap);NGAY_DO=2026-10-28;TO=12\nTEN,X,Y,H,MA\nM001,1820400.000,561200.000,3.96,GT\nM002,1820400.000,561219.062,4.33,GT\nM003,1820400.000,561235.108,4.61,GT\nM004,1820400.000,561254.720,3.75,GT\nM005,1820400.000,561273.151,4.40,GT\nM006,1820400.000,561290.278,3.60,GT\nM007,1820400.000,561308.000,4.32,GT\nM008,1820425.639,561200.000,4.21,GT\nM009,1820423.597,561217.327,3.90,GT\nM010,1820424.793,561236.754,4.75,GT\nM011,1820423.952,561253.362,3.23,GT\nM012,1820424.510,561272.518,4.04,GT\nM013,1820425.853,561288.863,4.11,GT\nM014,1820423.487,561308.000,3.98,GT\nM015,1820450.292,561200.000,3.89,GT\nM016,1820448.845,561217.456,4.59,GT\nM017,1820448.507,561237.093,4.26,GT\nM018,1820449.679,561254.551,4.06,GT\nM019,1820449.984,561271.498,3.85,GT\nM020,1820449.347,561291.214,4.56,GT\nM021,1820449.882,561308.000,3.51,GT\nM022,1820473.583,561200.000,3.28,GT\nM023,1820475.406,561217.226,3.56,GT\nM024,1820474.019,561234.823,3.67,GT\nM025,1820476.455,561253.643,4.28,GT\nM026,1820475.361,561271.799,3.43,GT\nM027,1820474.227,561290.149,3.33,GT\nM028,1820474.294,561308.000,3.35,GT\nM029,1820500.000,561200.000,3.35,GT\nM030,1820500.000,561218.969,3.21,GT\nM031,1820500.000,561236.340,3.79,GT\nM032,1820500.000,561252.619,3.56,GT\nM033,1820500.000,561270.837,3.23,GT\nM034,1820500.000,561290.682,4.19,GT\nM035,1820500.000,561308.000,4.50,GT\nM101,1820400.080,561290.188,4.01,GT\nM102,1820424.793,561237.704,3.90,GT\nM020,1820452.747,561289.114,3.55,GT\nGPS01,16.461237,107.589104,5.20,GPS\nM033X,1802452.000,561261.000,3.70,CT", "par": "THUA,DIEM\nT01,M001|M002|M009|M008\nT02,M002|M003|M010|M009\nT03,M003|M004|M011|M010\nT04,M004|M005|M012|M011\nT05,M005|M101|M013|M012\nT06,M006|M007|M014|M013\nT07,M008|M009|M016|M015\nT08,M009|M102|M017|M016\nT09,M010|M011|M018|M017\nT10,M011|M012|M019|M018\nT11,M012|M013|M020|M019\nT12,M013|M014|M021|M020\nT13,M015|M016|M023|M022\nT14,M016|M017|M024|M998\nT15,M017|M018|M025|M024\nT16,M018|M019|M026|M025\nT17,M019|M020|M027|M026\nT18,M020|M021|M028|M027\nT19,M022|M023|M029|M030\nT20,M023|M024|M031|M030\nT21,M024|M025|M032|M031\nT22,M025|M026|M033|M032\nT23,M026|M027|M034|M033\nT24,M027|M028|M035|M034", "att": "THUA,TO,SO_THUA,DT_PHAP_LY,LOAI_DAT,CHU_SD,SO_GCN,THANH_PHAN\nT01,12,141,445.7,ONT,Chủ SD #001,CS 80013,TD;BBMG;BTD\nT02,12,142,,CLN,Chủ SD #002,,TD;BBMG;BTD\nT03,12,143,441.0,ONT,Chủ SD #003,CS 80039,TD;BBMG;BTD\nT04,12,144,493.0,BHK,Chủ SD #004,CS 80052,TD;BBMG;BTD\nT05,12,145,420.8,LUC,Chủ SD #005,CS 80065,TD;BBMG;BTD;DDK\nT06,12,146,454.7,ONT,Chủ SD #006,CS 80078,TD;BBMG;BTD\nT07,12,147,435.3,ONT,Chủ SD #007,CS 80091,TD;BBMG;BTD\nT08,12,148,491.9,CLN,Chủ SD #008,CS 80104,TD;BBMG;BTD\nT09,12,149,419.3,ONT,,CS 80117,TD;BBMG;BTD\nT10,12,150,460.7,BHK,Chủ SD #010,CS 80130,TD;BBMG;BTD;DDK\nT11,12,151,440.3,LUC,Chủ SD #011,CS 80143,TD;BBMG;BTD\nT12,12,152,448.7,ONT,Chủ SD #012,CS 80156,TD;BBMG;BTD\nT13,12,153,432.3,ONTT,Chủ SD #013,CS 80169,TD;BBMG;BTD\nT14,12,154,450.4,CLN,Chủ SD #014,CS 80182,TD;BBMG;BTD\nT15,12,155,478.0,ONT,Chủ SD #015,CS 80195,TD;BBMG;BTD;DDK\nT16,12,156,458.9,BHK,Chủ SD #016,CS 80208,TD;BBMG;BTD\nT17,12,157,479.8,LUC,Chủ SD #017,CS 80221,TD;BBMG;BTD\nT18,12,157,425.3,ONT,Chủ SD #018,CS 80234,TD;BBMG;BTD\nT19,12,159,459.4,ONT,Chủ SD #019,CS 80247,TD;BBMG;BTD\nT20,12,160,442.4,CLN,Chủ SD #020,CS 80260,TD;BBMG;BTD;DDK\nT21,12,161,433.8,ONT,Chủ SD #021,CS 80273,TD;BTD\nT22,12,162,437.6,BHK,Chủ SD #022,CS 80286,TD;BBMG;BTD\nT23,12,163,481.7,LUC,Chủ SD #023,CS 80299,TD;BBMG;BTD", "errors": ["M020 trùng tên điểm", "GPS01 tọa độ dạng độ WGS-84", "M033X gõ nhầm X (ngoại lai ~18 km)", "T05 đỉnh M101 lệch 12 cm (khe hở)", "T08 đỉnh M102 lấn sang T09 (chồng lấn)", "T14 tham chiếu điểm M998 không tồn tại", "T19 sai thứ tự đỉnh (tự cắt)", "T04 lệch diện tích ~-7,6% so với GCN", "T09 thiếu chủ sử dụng", "T13 mã loại đất \"ONTT\"", "T17/T18 trùng số thửa", "T21 thiếu biên bản ranh giới, mốc giới", "T24 thiếu bản ghi thuộc tính"], "fix": {"dropDup": ["M020"], "remove": ["GPS01"], "shift": {"M033X": [18000, 0]}, "copyCoord": {"M102": "M010"}, "addCopy": {"M998": "M023"}, "attSet": {"T09": {"CHU_SD": "Chủ SD #009"}, "T18": {"SO_THUA": "158"}, "T21": {"THANH_PHAN": "TD;BBMG;BTD"}}, "attAdd": ["T24,12,164,452.6,ONT,Chủ SD #024,CS 80312,TD;BBMG;BTD"], "attRemove": []}}, "13": {"name": "Tờ 13 · Xã thí điểm A", "desc": "30 thửa, có thửa 5 đỉnh · 13 lỗi cài sẵn + hành lang lưới điện", "pts": "#HE_TOA_DO=VN2000;KTT=107.00;MUI=3;NGUON=GNSS-RTK + may toan dac (gia lap);NGAY_DO=2026-11-03;TO=13\nTEN,X,Y,H,MA\nD001,1820520.000,561300.000,4.65,GT\nD002,1820520.000,561316.556,5.71,GT\nD003,1820520.000,561336.048,4.46,GT\nD004,1820520.000,561349.192,4.37,GT\nD005,1820520.000,561370.175,5.84,GT\nD006,1820520.000,561386.891,5.33,GT\nD007,1820520.000,561406.000,4.53,GT\nD008,1820541.261,561300.000,5.08,GT\nD009,1820543.216,561316.325,4.04,GT\nD010,1820541.193,561333.940,6.18,GT\nD011,1820543.115,561350.918,6.07,GT\nD012,1820542.881,561372.348,5.98,GT\nD013,1820541.124,561389.050,5.22,GT\nD014,1820542.918,561406.000,5.41,GT\nD015,1820567.746,561300.000,4.91,GT\nD016,1820567.747,561315.441,4.29,GT\nD017,1820569.151,561335.895,6.46,GT\nD018,1820568.687,561350.163,5.87,GT\nD019,1820566.685,561371.530,5.11,GT\nD020,1820566.836,561387.108,5.31,GT\nD021,1820567.112,561406.000,5.15,GT\nD022,1820588.380,561300.000,4.99,GT\nD023,1820586.671,561315.973,4.59,GT\nD024,1820587.048,561334.083,4.92,GT\nD025,1820586.464,561350.454,6.38,GT\nD026,1820587.603,561371.657,6.33,GT\nD027,1820586.356,561386.925,6.02,GT\nD028,1820589.217,561406.000,5.60,GT\nD029,1820610.775,561300.000,5.03,GT\nD030,1820613.326,561317.159,6.01,GT\nD031,1820610.931,561336.061,4.94,GT\nD032,1820612.779,561348.911,6.43,GT\nD033,1820612.373,561371.668,4.53,GT\nD034,1820612.422,561388.243,5.48,GT\nD035,1820611.494,561406.000,5.82,GT\nD036,1820640.000,561300.000,4.85,GT\nD037,1820640.000,561315.386,4.41,GT\nD038,1820640.000,561335.552,4.28,GT\nD039,1820640.000,561349.177,4.17,GT\nD040,1820640.000,561371.431,5.39,GT\nD041,1820640.000,561388.130,4.10,GT\nD042,1820640.000,561406.000,5.10,GT\nD101,1820569.349,561325.668,4.69,GT\nD102,1820585.933,561361.055,4.19,GT\nD103,1820554.783,561372.739,4.01,GT\nD201,1820543.165,561350.858,6.07,GT\nD031,1820613.531,561337.961,4.94,GT\nCT07,1820571.836,570387.508,5.31,CT\nMOC03,16.462810,107.590455,6.10,GPS\n", "par": "THUA,DIEM\nP01,D001|D002|D009|D008\nP02,D002|D003|D010|D009\nP03,D003|D004|D011|D010\nP04,D004|D005|D012|D011\nP05,D005|D006|D013|D012\nP06,D006|D007|D014|D013\nP07,D008|D009|D016|D015\nP08,D009|D010|D017|D101|D016\nP09,D010|D011|D018|D017\nP10,D201|D012|D103|D019|D018\nP11,D012|D013|D020|D019|D103\nP12,D013|D014|D021|D020\nP13,D015|D016|D023|D022\nP14,D016|D101|D017|D024|D023\nP15,D017|D018|D025|D024\nP16,D018|D019|D026|D102|D025\nP17,D019|D020|D027|D777\nP18,D020|D021|D028|D027\nP19,D022|D023|D030|D029\nP20,D023|D024|D031|D030\nP21,D024|D025|D032|D031\nP22,D025|D102|D026|D033|D032\nP23,D026|D027|D034|D033\nP24,D027|D028|D035|D034\nP25,D029|D030|D037|D036\nP26,D030|D031|D037|D038\nP27,D031|D032|D039|D038\nP28,D032|D033|D040|D039\nP29,D033|D034|D041|D040\nP30,D034|D035|D042|D041\n", "att": "THUA,TO,SO_THUA,DT_PHAP_LY,LOAI_DAT,CHU_SD,SO_GCN,THANH_PHAN\nP01,13,201,367.2,ONT,Chủ SD #301,CT 95007,TD;BBMG;BTD\nP02,13,202,409.5,CLN,Chủ SD #302,CT 95014,TD;BBMG;BTD\nP03,13,203,,BHK,Chủ SD #303,,TD;BBMG;BTD\nP04,13,204,487.0,LUC,Chủ SD #304,CT 95028,TD;BBMG;BTD;DDK\nP05,13,205,369.8,ONT,Chủ SD #305,CT 95035,TD;BBMG;BTD\nP06,13,206,394.7,NTS,Chủ SD #306,CT 95042,TD;BBMG;BTD\nP07,13,207,405.5,CLN,Chủ SD #307,CT 95049,TD;BBMG;BTD\nP08,13,208,483.5,ONT,Chủ SD #308,CT 95056,TD;BBMG;BTD;DDK\nP09,13,209,418.8,ONT,Chủ SD #309,CT 95063,TD;BBMG;BTD\nP10,13,210,535.0,CLN,Chủ SD #310,CT 95070,TD;BBMG;BTD\nP11,13,211,388.4,BHK,Chủ SD #311,CT 95077,TD;BBMG;BTD\nP12,13,212,448.2,LUC,Chủ SD #312,CT 95084,TD;BTD\nP13,13,213,312.1,ONT,Chủ SD #313,CT 95091,TD;BBMG;BTD\nP14,13,214,346.4,CLM,Chủ SD #314,CT 95098,TD;BBMG;BTD\nP15,13,215,272.8,CLN,Chủ SD #315,CT 95105,TD;BBMG;BTD\nP16,13,216,400.8,ONT,Chủ SD #316,CT 95112,TD;BBMG;BTD;DDK\nP17,13,217,458.5,ONT,Chủ SD #317,CT 95119,TD;BBMG;BTD\nP18,13,218,393.8,CLN,Chủ SD #318,CT 95126,TD;BBMG;BTD\nP19,13,219,406.0,BHK,Chủ SD #319,CT 95133,TD;BBMG;BTD\nP20,13,220,470.8,LUC,Chủ SD #320,CT 95140,TD;BBMG;BTD;DDK\nP21,13,221,367.3,ONT,,CT 95147,TD;BBMG;BTD\nP22,13,222,572.3,NTS,Chủ SD #322,CT 95154,TD;BBMG;BTD\nP23,13,223,405.7,CLN,Chủ SD #323,CT 95161,TD;BBMG;BTD\nP24,13,223,445.7,ONT,Chủ SD #324,CT 95168,TD;BBMG;BTD;DDK\nP25,13,225,455.1,ONT,Chủ SD #325,CT 95175,TD;BBMG;BTD\nP26,13,226,543.5,CLN,Chủ SD #326,CT 95182,TD;BBMG;BTD\nP27,13,227,372.2,BHK,Chủ SD #327,CT 95189,TD;BBMG;BTD\nP28,13,228,615.9,LUC,Chủ SD #328,CT 95196,TD;BBMG;BTD;DDK\nP29,13,229,458.4,ONT,Chủ SD #329,CT 95203,TD;BBMG;BTD\nP99,13,299,350.0,ONT,Chủ SD #399,CT 95999,TD;BBMG;BTD\n", "errors": ["D031 trùng tên điểm", "CT07 gõ nhầm Y (ngoại lai ~9 km)", "MOC03 tọa độ dạng độ WGS-84", "P17 tham chiếu điểm D777 không tồn tại", "P26 sai thứ tự đỉnh (tự cắt)", "P10 đỉnh D201 lệch 8 cm (khe hở)", "P08 lệch diện tích +5,3% so với GCN", "P14 mã loại đất \"CLM\"", "P21 thiếu chủ sử dụng", "P23/P24 trùng số thửa", "P12 thiếu biên bản ranh giới, mốc giới", "P30 thiếu bản ghi thuộc tính", "P99 bản ghi thuộc tính mồ côi"], "fix": {"dropDup": ["D031"], "remove": ["MOC03"], "shift": {"CT07": [0, -9000]}, "copyCoord": {}, "addCopy": {"D777": "D026"}, "attSet": {"P21": {"CHU_SD": "Chủ SD #321"}, "P24": {"SO_THUA": "230"}, "P12": {"THANH_PHAN": "TD;BBMG;BTD"}}, "attAdd": ["P30,13,231,499.5,ONT,Chủ SD #330,CT 95210,TD;BBMG;BTD"], "attRemove": ["P99"]}}, "14": {"name": "Tờ 14 · Xã thí điểm A", "desc": "20 thửa, dữ liệu sạch — đối chứng: kỳ vọng 0 lỗi", "pts": "#HE_TOA_DO=VN2000;KTT=107.00;MUI=3;NGUON=GNSS-RTK (gia lap);NGAY_DO=2026-11-04;TO=14\nTEN,X,Y,H,MA\nN001,1820640.000,561300.000,5.32,GT\nN002,1820640.000,561320.567,6.96,GT\nN003,1820640.000,561338.233,5.81,GT\nN004,1820640.000,561358.316,7.20,GT\nN005,1820640.000,561377.444,5.91,GT\nN006,1820640.000,561396.000,7.05,GT\nN007,1820663.669,561300.000,7.33,GT\nN008,1820662.779,561319.225,7.70,GT\nN009,1820663.546,561336.329,7.41,GT\nN010,1820664.421,561358.019,6.65,GT\nN011,1820664.525,561376.062,6.96,GT\nN012,1820662.794,561396.000,6.01,GT\nN013,1820684.666,561300.000,5.61,GT\nN014,1820687.530,561319.730,7.97,GT\nN015,1820685.804,561337.301,7.62,GT\nN016,1820686.598,561357.912,6.77,GT\nN017,1820686.428,561376.107,5.28,GT\nN018,1820687.199,561396.000,6.54,GT\nN019,1820712.020,561300.000,6.36,GT\nN020,1820712.098,561320.835,6.50,GT\nN021,1820711.728,561337.891,5.27,GT\nN022,1820712.298,561357.678,7.22,GT\nN023,1820711.764,561377.072,5.28,GT\nN024,1820712.937,561396.000,7.06,GT\nN025,1820736.000,561300.000,6.60,GT\nN026,1820736.000,561319.874,6.45,GT\nN027,1820736.000,561336.824,6.79,GT\nN028,1820736.000,561357.866,6.42,GT\nN029,1820736.000,561376.262,7.60,GT\nN030,1820736.000,561396.000,7.82,GT\nN900,1820663.962,561327.777,6.00,GT\nN901,1820699.448,561357.095,6.00,GT\nN902,1820711.459,561310.418,6.00,GT", "par": "THUA,DIEM\nQ01,N001|N002|N008|N007\nQ02,N002|N003|N009|N900|N008\nQ03,N003|N004|N010|N009\nQ04,N004|N005|N011|N010\nQ05,N005|N006|N012|N011\nQ06,N007|N008|N014|N013\nQ07,N008|N900|N009|N015|N014\nQ08,N009|N010|N016|N015\nQ09,N010|N011|N017|N016\nQ10,N011|N012|N018|N017\nQ11,N013|N014|N020|N902|N019\nQ12,N014|N015|N021|N020\nQ13,N015|N016|N901|N022|N021\nQ14,N016|N017|N023|N022|N901\nQ15,N017|N018|N024|N023\nQ16,N019|N902|N020|N026|N025\nQ17,N020|N021|N027|N026\nQ18,N021|N022|N028|N027\nQ19,N022|N023|N029|N028\nQ20,N023|N024|N030|N029", "att": "THUA,TO,SO_THUA,DT_PHAP_LY,LOAI_DAT,CHU_SD,SO_GCN,THANH_PHAN\nQ01,14,301,460.6,CLN,Chủ SD #501,CU 70011,TD;BBMG;BTD;DDK\nQ02,14,302,409.3,ONT,Chủ SD #502,CU 70022,TD;BBMG;BTD;DDK\nQ03,14,303,502.0,LUC,Chủ SD #503,CU 70033,TD;BBMG;BTD;DDK\nQ04,14,304,455.1,BHK,Chủ SD #504,CU 70044,TD;BBMG;BTD;DDK\nQ05,14,305,453.5,ONT,Chủ SD #505,CU 70055,TD;BBMG;BTD;DDK\nQ06,14,306,445.8,NTS,Chủ SD #506,CU 70066,TD;BBMG;BTD;DDK\nQ07,14,307,402.1,ONT,Chủ SD #507,CU 70077,TD;BBMG;BTD;DDK\nQ08,14,308,469.3,CLN,Chủ SD #508,CU 70088,TD;BBMG;BTD;DDK\nQ09,14,309,399.0,ONT,Chủ SD #509,CU 70099,TD;BBMG;BTD;DDK\nQ10,14,310,461.3,LUC,Chủ SD #510,CU 70110,TD;BBMG;BTD;DDK\nQ11,14,311,520.9,BHK,Chủ SD #511,CU 70121,TD;BBMG;BTD;DDK\nQ12,14,312,437.4,ONT,Chủ SD #512,CU 70132,TD;BBMG;BTD;DDK\nQ13,14,313,511.7,NTS,Chủ SD #513,CU 70143,TD;BBMG;BTD;DDK\nQ14,14,314,487.8,ONT,Chủ SD #514,CU 70154,TD;BBMG;BTD;DDK\nQ15,14,315,495.6,CLN,Chủ SD #515,CU 70165,TD;BBMG;BTD;DDK\nQ16,14,316,493.5,ONT,Chủ SD #516,CU 70176,TD;BBMG;BTD;DDK\nQ17,14,317,408.8,LUC,Chủ SD #517,CU 70187,TD;BBMG;BTD;DDK\nQ18,14,318,489.5,BHK,Chủ SD #518,CU 70198,TD;BBMG;BTD;DDK\nQ19,14,319,451.5,ONT,Chủ SD #519,CU 70209,TD;BBMG;BTD;DDK\nQ20,14,320,456.9,NTS,Chủ SD #520,CU 70220,TD;BBMG;BTD;DDK", "errors": ["Không có lỗi cài sẵn — dùng làm đối chứng (kỳ vọng 20/20 thửa sẵn sàng nộp)"], "fix": null}, "15": {"name": "Tờ 15 · Xã thí điểm A", "desc": "20 thửa, có dải thửa rất nhỏ · lỗi định dạng Excel, thiếu siêu dữ liệu, mã loại đất mơ hồ, hành lang thủy lợi", "pts": "TEN,X,Y,H,MA\nK001,1820400.000,561420.000,7.90,GT\nK002,1820400.000,561437.633,7.21,GT\nK003,1820400.000,561454.897,7.96,GT\nK004,1820400.000,561456.455,7.64,GT\nK005,1820400.000,561477.108,7.57,GT\nK006,1820400.000,561494.600,8.00,GT\nK007,1820421.167,561420.000,6.01,GT\nK008,1820422.666,561438.386,5.79,GT\nK009,1820421.132,561455.107,7.62,GT\nK010,1820422.952,561456.517,7.77,GT\nK011,1820422.036,561475.848,6.37,GT\nK012,1820421.744,561494.600,5.24,GT\nK013,1820447.207,561420.000,6.08,GT\nK014,1820447.223,561440.205,6.94,GT\nK015,1820446.696,561455.109,7.99,GT\nK016,1820446.969,561456.734,5.06,GT\nK017,1820445.849,561475.682,7.81,GT\nK018,1820447.610,561494.600,7.16,GT\nK019,1820467.317,561420.000,6.48,GT\nK020,1820469.239,561437.880,5.35,GT\nK021,1820466.552,561454.991,7.52,GT\nK022,1820468.176,561456.570,6.51,GT\nK023,1820466.973,561477.855,6.06,GT\nK024,1820467.153,561494.600,5.93,GT\nK025,1820494.000,561420.000,7.47,GT\nK026,1820494.000,561438.491,7.71,GT\nK027,1820494.000,561454.951,6.32,GT\nK028,1820494.000,561456.472,7.72,GT\nK029,1820494.000,561477.429,6.42,GT\nK030,1820494.000,561494.600,5.35,GT\nK900,1820423.394,561466.182,6.00,GT\nK901,1820447.215,561430.102,6.00,GT\nK902,1820458.231,561439.842,6.00,GT\nK801,1820419.932,561454.407,7.62,GT\nK12,1820471,250,6.20,CT", "par": "THUA,DIEM\nK01,K001|K002|K008|K007\nK02,K002|K003|K009|K008\nK03,K003|K004|K010|K009\nK04,K004|K005|K011|K900|K010\nK05,K005|K006|K012|K011\nK06,K007|K008|K014|K901|K013\nK07,K008|K009|K015|K014\nK08,K801|K010|K016|K015\nK09,K010|K900|K011|K017|K016\nK10,K011|K012|K018|K017\nK11,K013|K901|K014|K902|K020|K019\nK12,K014|K015|K021|K020|K902\nK13,K015|K016|K022|K021\nK14,K016|K017|K023|K022\nK15,K017|K018|K024|K023\nK16,K019|K020|K026|K025\nK17,K020|K021|K027|K026\nK18,K021|K022|K028|K027\nK19,K022|K023|K029|K028\nK20,K023|K024|K030|K029", "att": "THUA,TO,SO_THUA,DT_PHAP_LY,LOAI_DAT,CHU_SD,SO_GCN,THANH_PHAN\nK01,15,401,394.4,CLN,Chủ SD #601,CV 60009,TD;BBMG;BTD;DDK\nK02,15,402,372.2,LUK,Chủ SD #602,CV 60018,TD;BBMG;BTD;DDK\nK03,15,403,32.6,BHK,Chủ SD #603,CV 60027,TD;BBMG;BTD;DDK\nK04,,404,459.3,ONT,Chủ SD #604,CV 60036,TD;BBMG;BTD;DDK\nK05,15,405,397.2,CLN,Chủ SD #605,CV 60045,TD;BBMG;BTD;DDK\nK06,15,406,486.8,ONT,Chủ SD #606,CV 60054,TD;BBMG;BTD;DDK\nK07,15,407,396.1,CLN,Chủ SD #607,CV 60063,TD;BBMG;BTD;DDK\nK08,15,408,37.6,LUK,Chủ SD #608,CV 60072,TD;BBMG;BTD;DDK\nK09,15,409,450.2,BHK,Chủ SD #609,CV 60081,TD;BBMG;BTD;DDK\nK10,15,410,466.9,ONT,Chủ SD #610,CV 60090,TD;BBMG;BTD;DDK\nK11,15,411,460.3,CLN,Chủ SD #611,CV 60099,TD;BBMG;BTD;DDK\nK12,15,412,324.3,ONT,Chủ SD #612,CV 60108,TD;BBMG;BTD;DDK\nK13,15,413,33.1,CLN,Chủ SD #613,CV 60117,TD;BBMG;BTD;DDK\nK14,15,414,425.8,LUK,Chủ SD #614,CV 60126,TD;BBMG;BTD;DDK\nK15,15,415,360.6,BHK,Chủ SD #615,CV 60135,TD;BBMG;BTD;DDK\nK16,15,416,468.4,LUA,Chủ SD #616,CV 60144,TD;BBMG;BTD;DDK\nK17,15,417,438.7,CLN,Chủ SD #617,CV 60153,TD;BBMG;BTD;DDK\nK18,15,418,41.3,ONT,Chủ SD #618,CV 60162,TD;BBMG;BTD;DDK\nK19,15,419,558.9,CLN,Chủ SD #619,CV 60171,TD;BBMG;DDK\nK20,15,420,457.1,LUK,Chủ SD #620,CV 60180,TD;BBMG;BTD;DDK", "errors": ["Tệp điểm thiếu dòng siêu dữ liệu hệ tọa độ (#HE_TOA_DO, #KTT)", "K12 lưu bằng dấu phẩy thập phân kiểu Excel → Y = 250 (ngoài miền VN-2000)", "K08 đỉnh K801 lệch ~1,4 m ra ngoài → chồng lấn với thửa liền kề (kéo theo lệch diện tích K08)", "K11 lệch diện tích ~-11% so với GCN", "K16 mã loại đất \"LUA\" mơ hồ (LUC/LUK/LUN) — không tự sửa", "K04 thiếu số tờ", "K19 thiếu bảng tọa độ góc thửa", "Thửa rất nhỏ: K03 (32.6 m²), K08 (37.5 m²), K13 (33.0 m²), K18 (41.4 m²) — thử tạo quy tắc “diện tích tối thiểu” ở Sổ tay lỗi"], "fix": {"dropDup": [], "remove": [], "shift": {}, "copyCoord": {"K801": "K009"}, "addCopy": {}, "header": "#HE_TOA_DO=VN2000;KTT=107.00;MUI=3;NGUON=May toan dac (gia lap);NGAY_DO=2026-11-05;TO=15", "fixLine": {"K12": "K12,1820471.176,561456.970,6.20,CT"}, "attSet": {"K04": {"TO": "15"}, "K19": {"THANH_PHAN": "TD;BBMG;BTD;DDK"}, "K16": {"LOAI_DAT": "LUK"}}, "attAdd": [], "attRemove": []}}};
+/* =====================================================================
+   GeoAgent Pilot v0.3 — logic xác định (deterministic) + RBAC minh họa.
+   Không có LLM trong phép tính: tọa độ, diện tích, topology, chồng lớp.
+   ===================================================================== */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (n, d = 1) => (n == null || isNaN(n)) ? "—" : Number(n).toLocaleString("vi-VN", { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt0 = (n) => fmt(n, 0);
+const strip = (s) => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d");
+let toastT; function toast(m) { const t = $("toast"); t.textContent = m; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 2800); }
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+
+/* ---------------- RBAC ---------------- */
+const PERMS = [
+  ["view.overview", "Xem bảng điều khiển CEO"], ["data.edit", "Nạp/sửa dữ liệu tờ bản đồ, nạp kết quả xác minh"], ["run", "Chạy GeoAgent"],
+  ["approve.A1", "Duyệt đề xuất Tác tử 01 (không gian)"], ["approve.A2", "Xác nhận cảnh báo Tác tử 02 (pháp lý, quy hoạch)"], ["approve.A3", "Duyệt đề xuất Tác tử 03 (CSDL)"],
+  ["rules", "Tạo/bật/tắt quy tắc sổ tay lỗi"], ["export", "Xuất dữ liệu, biên bản"], ["sign", "Ký và xuất gói hồ sơ"], ["audit.view", "Xem nhật ký kiểm toán"],
+  ["config", "Cấu hình hệ thống & ngưỡng kiểm tra"], ["users.accounts", "Quản lý tài khoản (thêm, khóa/mở)"], ["users.perms", "Phân quyền cho Staff"],
+];
+const PERM_NAME = Object.fromEntries(PERMS);
+const STAFF_ASSIGNABLE = ["view.overview", "data.edit", "run", "approve.A1", "approve.A2", "approve.A3", "rules", "export", "sign", "audit.view"];
+const ROLE_PERMS = {
+  admin: ["view.overview", "run", "audit.view", "config", "users.accounts"],
+  ceo: PERMS.map((p) => p[0]),
+};
+const ROLE_INFO = {
+  admin: ["Admin", "Quản trị hệ thống", "Cấu hình hệ thống, tài khoản, nhật ký kiểm toán, chạy kiểm tra. Không sửa dữ liệu, không duyệt, không ký, không xuất dữ liệu, không tự phân quyền nghiệp vụ."],
+  ceo: ["CEO", "Giám đốc công ty", "Toàn quyền: dữ liệu, duyệt, ký, xuất, quy tắc, cấu hình, tài khoản và phân quyền cho Staff."],
+  staff: ["Staff", "Nhân sự kỹ thuật", "Chỉ các quyền CEO cấp trong ma trận; không có quyền cấu hình hệ thống hay quản lý tài khoản."],
+};
+const USERS = [
+  { id: "u-admin", username: "admin", demoPw: "Admin@2026", name: "Quản trị hệ thống", title: "IT / Admin", role: "admin", active: true },
+  { id: "u-ceo", username: "ceo", demoPw: "CeoPT@2026", name: "Giám đốc Phước Thịnh", title: "CEO", role: "ceo", active: true },
+  { id: "u-ks01", username: "ks01", demoPw: "Staff@2026", name: "KS. Trắc địa 01", title: "Kỹ sư trắc địa (có chứng chỉ)", role: "staff", active: true },
+  { id: "u-csdl01", username: "csdl01", demoPw: "Staff@2026", name: "CB. CSDL 01", title: "Cán bộ CSDL địa chính", role: "staff", active: true },
+  { id: "u-qa01", username: "qa01", demoPw: "Staff@2026", name: "Tổ trưởng KTNT", title: "Tổ trưởng kiểm tra nội bộ", role: "staff", active: true },
+];
+USERS.forEach((u) => Object.assign(u, { failed: 0, mustChange: false, pwHash: null, lastLogin: null }));
+const staffPerms = {
+  "u-ks01": new Set(["view.overview", "data.edit", "run", "approve.A1", "export", "sign"]),
+  "u-csdl01": new Set(["run", "approve.A3", "export"]),
+  "u-qa01": new Set(["view.overview", "run", "approve.A1", "approve.A2", "approve.A3", "rules", "audit.view", "export"]),
+};
+let me = null;
+function can(p) { if (!me || !me.active || me.mustChange) return false; if (me.role === "ceo") return true; if (me.role === "admin") return ROLE_PERMS.admin.includes(p); return !!(staffPerms[me.id] && staffPerms[me.id].has(p)); }
+function guard(p, what) { if (can(p)) return true; toast(`${ROLE_INFO[me.role][0]} “${me.name}” không có quyền: ${PERM_NAME[p] || p}`); audit("Từ chối truy cập", `${what} — thiếu quyền “${PERM_NAME[p] || p}”`); return false; }
+const who = () => (me ? `${me.name} (${ROLE_INFO[me.role][0]})` : "Khách (chưa đăng nhập)");
+function applyPermUI() {
+  document.querySelectorAll("[data-perm]").forEach((el) => {
+    const ok = can(el.dataset.perm);
+    if (el.tagName === "TEXTAREA") el.readOnly = !ok;
+    else el.disabled = !ok;
+    el.title = ok ? "" : "Cần quyền: " + (PERM_NAME[el.dataset.perm] || el.dataset.perm);
+    if (el.classList.contains("btn")) el.classList.toggle("nope", !ok);
+  });
+  const viewPerm = { "tong-quan": "view.overview", "nhat-ky": "audit.view", "cai-dat": "config" };
+  document.querySelectorAll("nav a").forEach((a) => { const p = viewPerm[a.dataset.v]; a.classList.toggle("locked", !!p && !can(p)); });
+  if (!me) return;
+  const rc = $("roleChip"); rc.textContent = ROLE_INFO[me.role][0]; rc.className = "chip role-" + me.role;
+  $("editPerm").innerHTML = can("data.edit") ? `<span class="chip ok">Được sửa dữ liệu</span>` : `<span class="chip warn">Chỉ xem — thiếu quyền sửa dữ liệu</span>`;
+}
+function viewAllowed(v) { const m = { "tong-quan": "view.overview", "nhat-ky": "audit.view", "cai-dat": "config" }; return !m[v] || can(m[v]); }
+/* ---------------- đăng nhập / phiên ---------------- */
+const MAX_FAILED = 5, IDLE_MIN = 15, sess = { get() { try { return JSON.parse(sessionStorage.getItem("ga.sess") || "null"); } catch (e) { return null; } }, set(v) { try { v ? sessionStorage.setItem("ga.sess", JSON.stringify(v)) : sessionStorage.removeItem("ga.sess"); } catch (e) {} } };
+let lastAct = Date.now(), idleTimer = null, appStarted = false;
+const pwHashOf = (u, pw) => sha("geoagent-demo|" + u.username + "|" + pw);
+const PW_RULE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{10,}$/;
+function saveAccounts() { store.set("ga.accounts", JSON.stringify(USERS.map((u) => ({ id: u.id, username: u.username, name: u.name, title: u.title, role: u.role, active: u.active, failed: u.failed, mustChange: u.mustChange, pwHash: u.pwHash, lastLogin: u.lastLogin, perms: u.role === "staff" ? [...(staffPerms[u.id] || [])] : undefined })))); }
+function loadAccounts() {
+  let saved; try { saved = JSON.parse(store.get("ga.accounts") || "null"); } catch (e) { saved = null; }
+  if (!Array.isArray(saved)) return;
+  saved.forEach((r) => { let u = USERS.find((x) => x.id === r.id); if (!u) { u = { id: r.id }; USERS.push(u); } Object.assign(u, r); delete u.perms; if (r.perms) staffPerms[u.id] = new Set(r.perms.filter((p) => STAFF_ASSIGNABLE.includes(p))); });
+}
+async function ensureHashes() { for (const u of USERS) if (!u.pwHash && u.demoPw) u.pwHash = await pwHashOf(u, u.demoPw); }
+function renderLogin() {
+  const R = { admin: [["Được", "cấu hình hệ thống, quản lý tài khoản (thêm, khóa/mở), xem và kiểm nhật ký, chạy kiểm tra"], ["Không được", "nạp/sửa dữ liệu, duyệt đề xuất, tạo quy tắc, xuất dữ liệu, ký, phân quyền nghiệp vụ"]],
+    ceo: [["Được", "toàn quyền: dữ liệu, duyệt 3 tác tử, quy tắc, xuất, ký gói hồ sơ, cấu hình, tài khoản"], ["Riêng CEO", "phân quyền chi tiết cho từng Staff"]],
+    staff: [["Được", "đúng các quyền CEO đánh dấu trong ma trận phân quyền"], ["Không được", "cấu hình hệ thống, quản lý tài khoản, tự cấp quyền"]] };
+  $("lgRoles").innerHTML = ["admin", "ceo", "staff"].map((r) => `<div class="lg-role"><div class="t"><span class="chip role-${r}">${ROLE_INFO[r][0]}</span>${ROLE_INFO[r][1]}</div><ul>${R[r].map(([k, v]) => `<li><b>${k}:</b> ${v}</li>`).join("")}</ul></div>`).join("");
+  $("demoAcc").innerHTML = USERS.filter((u) => u.demoPw).map((u) => { const n = u.role === "staff" ? (staffPerms[u.id] ? staffPerms[u.id].size : 0) : ROLE_PERMS[u.role].length; return `<button type="button" onclick="fillDemo('${u.id}')"><span class="chip role-${u.role}">${ROLE_INFO[u.role][0]}</span><span class="u">${esc(u.username)}</span><span class="d">${esc(u.title)} · ${n}/${PERMS.length} quyền</span>${u.active ? "" : `<span class="chip grey lk">đã khóa</span>`}</button>`; }).join("");
+}
+function fillDemo(id) { const u = USERS.find((x) => x.id === id); $("lgUser").value = u.username; $("lgPw").value = u.demoPw; $("lgErr").classList.remove("on"); $("lgBtn").focus(); }
+function togglePw(id, b) { const i = $(id); i.type = i.type === "password" ? "text" : "password"; b.textContent = i.type === "password" ? "Hiện" : "Ẩn"; }
+function lgError(m) { const e = $("lgErr"); e.textContent = m; e.classList.add("on"); }
+async function doLogin() {
+  const un = $("lgUser").value.trim().toLowerCase(), pw = $("lgPw").value; $("lgErr").classList.remove("on");
+  if (!un || !pw) return lgError("Nhập tên đăng nhập và mật khẩu");
+  await ensureHashes();
+  const u = USERS.find((x) => x.username === un);
+  if (!u) { audit("Đăng nhập thất bại", `Tài khoản “${un}” không tồn tại`, un); return lgError("Sai tên đăng nhập hoặc mật khẩu"); }
+  if (!u.active) { audit("Đăng nhập bị chặn", "Tài khoản đang khóa", `${u.name} (${ROLE_INFO[u.role][0]})`); return lgError("Tài khoản đang bị khóa — liên hệ quản trị hệ thống để mở khóa"); }
+  if ((await pwHashOf(u, pw)) !== u.pwHash) {
+    u.failed++; const left = MAX_FAILED - u.failed; let msg = `Sai mật khẩu lần ${u.failed}/${MAX_FAILED}`;
+    if (left <= 0) { u.active = false; msg += " → khóa tài khoản"; }
+    audit("Đăng nhập thất bại", msg, `${u.name} (${ROLE_INFO[u.role][0]})`); saveAccounts(); renderLogin();
+    return lgError(left <= 0 ? "Tài khoản đã bị khóa do nhập sai " + MAX_FAILED + " lần. Quản trị hệ thống cần mở khóa." : `Sai tên đăng nhập hoặc mật khẩu · còn ${left} lần thử trước khi khóa`);
+  }
+  u.failed = 0; u.lastLogin = new Date().toISOString(); saveAccounts();
+  try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  startSession(u, "Đăng nhập");
+  if (u.mustChange) openPwModal(true);
+}
+function startSession(u, how) {
+  me = u; lastAct = Date.now(); sess.set({ uid: u.id, at: lastAct });
+  $("lgPw").value = ""; document.body.classList.remove("locked"); $("login").classList.remove("on");
+  audit(how, `${who()} · phiên tối đa ${IDLE_MIN} phút không thao tác`);
+  fillUserSel(); applyPermUI();
+  if (!appStarted) { appStarted = true; renderAll(); } else renderAll();
+  route(); clearInterval(idleTimer); idleTimer = setInterval(checkIdle, 15000);
+  toast("Xin chào " + u.name + " · " + ROLE_INFO[u.role][0]);
+}
+function logout(reason) {
+  if (!me) return; toggleUserMenu(false); audit(reason, reason === "Đăng xuất" ? "Người dùng chủ động đăng xuất" : `Không thao tác quá ${IDLE_MIN} phút`);
+  me = null; sess.set(null); clearInterval(idleTimer); closeModal && closeModal(); closePwModal(true);
+  document.body.classList.add("locked"); $("login").classList.add("on"); renderLogin();
+  if (reason !== "Đăng xuất") lgError(`Phiên đã hết do không thao tác ${IDLE_MIN} phút. Đăng nhập lại để tiếp tục.`);
+  setTimeout(() => $("lgUser").focus(), 50);
+}
+function checkIdle() { if (me && Date.now() - lastAct > IDLE_MIN * 60000) logout("Hết phiên"); else if (me) { sess.set({ uid: me.id, at: lastAct }); $("udSess").textContent = "Tự đăng xuất sau " + Math.max(0, Math.ceil(IDLE_MIN - (Date.now() - lastAct) / 60000)) + " phút nếu không thao tác"; } }
+["click", "keydown", "pointermove", "touchstart", "scroll"].forEach((ev) => window.addEventListener(ev, () => { lastAct = Date.now(); }, { passive: true, capture: true }));
+function restoreSession() {
+  const sv = sess.get(); if (!sv) return false; const u = USERS.find((x) => x.id === sv.uid);
+  if (!u || !u.active || Date.now() - sv.at > IDLE_MIN * 60000) { sess.set(null); return false; }
+  startSession(u, "Khôi phục phiên"); if (u.mustChange) openPwModal(true); return true;
+}
+function toggleUserMenu(on) { const d = $("userDrop"); const v = on === undefined ? !d.classList.contains("on") : on; d.classList.toggle("on", v); $("userBtn").setAttribute("aria-expanded", v); }
+document.addEventListener("click", (e) => { if (!e.target.closest || !e.target.closest(".umenu")) toggleUserMenu(false); });
+function fillUserSel() {
+  if (!me) return; const n = me.role === "staff" ? (staffPerms[me.id] ? staffPerms[me.id].size : 0) : ROLE_PERMS[me.role].length;
+  $("userName").textContent = me.name; $("udName").textContent = me.name + " · " + me.username; $("udTitle").textContent = me.title;
+  $("udPerms").innerHTML = `<span class="chip role-${me.role}">${ROLE_INFO[me.role][0]}</span> ${n}/${PERMS.length} quyền hiệu lực`;
+  $("udSess").textContent = `Tự đăng xuất sau ${IDLE_MIN} phút nếu không thao tác`;
+}
+let pwForced = false;
+function openPwModal(forced) { pwForced = !!forced; $("pwTitle").textContent = forced ? "Đổi mật khẩu tạm" : "Đổi mật khẩu"; $("pwSub").textContent = forced ? "Tài khoản đang dùng mật khẩu tạm do quản trị cấp. Phải đổi trước khi thao tác." : "Đổi mật khẩu sẽ ghi vào nhật ký."; $("pwCancel").style.display = forced ? "none" : ""; ["pwOld", "pwNew", "pwNew2"].forEach((i) => ($(i).value = "")); $("pwErr").classList.remove("on"); $("pwModal").classList.add("on"); setTimeout(() => $("pwOld").focus(), 30); }
+function closePwModal(forceClose) { if (pwForced && !forceClose) return; pwForced = false; $("pwModal").classList.remove("on"); }
+async function doChangePw() {
+  const e = $("pwErr"), err = (m) => { e.textContent = m; e.classList.add("on"); };
+  if ((await pwHashOf(me, $("pwOld").value)) !== me.pwHash) return err("Mật khẩu hiện tại không đúng");
+  const n = $("pwNew").value; if (!PW_RULE.test(n)) return err("Mật khẩu mới chưa đạt: ≥ 10 ký tự, có chữ hoa, chữ thường và chữ số");
+  if (n !== $("pwNew2").value) return err("Hai lần nhập mật khẩu mới không khớp");
+  if (n === $("pwOld").value) return err("Mật khẩu mới phải khác mật khẩu hiện tại");
+  me.pwHash = await pwHashOf(me, n); me.mustChange = false; delete me.demoPw; saveAccounts(); audit("Đổi mật khẩu", who()); closePwModal(true); renderLogin(); toast("Đã đổi mật khẩu");
+}
+function guardTemp() { if (me && me.mustChange) { openPwModal(true); return false; } return true; }
+function setStaffPerm(uid, p, on) {
+  if (!guard("users.perms", "Đổi phân quyền Staff")) { renderAccounts(); return; }
+  (staffPerms[uid] = staffPerms[uid] || new Set())[on ? "add" : "delete"](p);
+  const u = USERS.find((x) => x.id === uid); audit(on ? "Cấp quyền" : "Thu hồi quyền", `${PERM_NAME[p]} → ${u.name}`); saveAccounts(); renderAccounts();
+}
+function toggleUser(uid) {
+  if (!guard("users.accounts", "Khóa/mở tài khoản")) return;
+  const u = USERS.find((x) => x.id === uid); if (u.id === me.id) return toast("Không tự khóa tài khoản của mình");
+  if (u.active && u.role !== "staff") return toast("Chỉ khóa tài khoản Staff qua giao diện; Admin/CEO khóa theo quy trình khẩn cấp có biên bản");
+  u.active = !u.active; if (u.active) u.failed = 0; audit(u.active ? "Mở khóa tài khoản" : "Khóa tài khoản", `${u.name} (${u.username})`); saveAccounts(); fillUserSel(); renderAccounts(); renderLogin();
+}
+function addUser() {
+  if (!guard("users.accounts", "Thêm tài khoản")) return;
+  const un = $("nuUser").value.trim().toLowerCase(); const name = $("nuName").value.trim();
+  if (!/^[a-z0-9._-]{3,32}$/.test(un)) return toast("Tên đăng nhập 3–32 ký tự: chữ thường, số, . _ -");
+  if (USERS.some((x) => x.username === un)) return toast("Tên đăng nhập đã tồn tại");
+  if (!name) return toast("Nhập họ tên / mã nhân sự");
+  const tmp = "Tmp" + Array.from(crypto.getRandomValues(new Uint8Array(6)), (b) => "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789"[b % 56]).join("") + "9a";
+  const u = { id: "u-" + Date.now().toString(36), username: un, name, title: $("nuTitle").value.trim() || "Nhân sự", role: "staff", active: true, failed: 0, mustChange: true, pwHash: null, lastLogin: null };
+  pwHashOf(u, tmp).then((h) => { u.pwHash = h; USERS.push(u); staffPerms[u.id] = new Set(); ["nuUser", "nuName", "nuTitle"].forEach((i) => ($(i).value = ""));
+    audit("Thêm tài khoản", `${u.name} (${un}) — ${u.title} · Staff, chưa có quyền, mật khẩu tạm phải đổi khi đăng nhập`); saveAccounts(); renderAccounts(); renderLogin();
+    openModal("Mật khẩu tạm cho " + un, "Chỉ hiển thị một lần — gửi cho người dùng qua kênh riêng", `Tên đăng nhập: ${un}\nMật khẩu tạm: ${tmp}\n\nNgười dùng phải đổi mật khẩu ở lần đăng nhập đầu tiên.\nTài khoản chưa có quyền nào cho tới khi CEO cấp trong ma trận phân quyền.`, "Bản thật: máy chủ sinh mật khẩu tạm và chỉ lưu dạng băm scrypt."); });
+}
+function renderAccounts() {
+  $("roleCards").innerHTML = ["admin", "ceo", "staff"].map((r) => { const [n, t, d] = ROLE_INFO[r]; const ps = r === "staff" ? "Theo ma trận" : ROLE_PERMS[r].length + "/" + PERMS.length + " quyền"; return `<div class="card"><div class="row" style="justify-content:space-between"><span class="chip role-${r}">${n}</span><span class="small muted">${ps}</span></div><h3 style="margin-top:8px">${t}</h3><div class="small muted">${d}</div>${r !== "staff" ? `<div class="small" style="margin-top:8px">${ROLE_PERMS[r].map((p) => "✓ " + PERM_NAME[p]).join("<br>")}</div>` : ""}</div>`; }).join("");
+  const staff = USERS.filter((u) => u.role === "staff"); const ed = can("users.perms");
+  $("matrixNote").innerHTML = ed ? `<span class="chip ok">Bạn được chỉnh ma trận</span>` : `<span class="chip warn">Chỉ xem — chỉ CEO phân quyền Staff</span>`;
+  $("permMatrix").innerHTML = `<table class="small"><tr><th>Quyền</th>${staff.map((u) => `<th class="c">${esc(u.name)}${u.active ? "" : " <span class='chip grey'>khóa</span>"}</th>`).join("")}</tr>${STAFF_ASSIGNABLE.map((p) => `<tr><td>${PERM_NAME[p]}</td>${staff.map((u) => `<td class="c"><input class="cb" type="checkbox" ${staffPerms[u.id] && staffPerms[u.id].has(p) ? "checked" : ""} ${ed ? "" : "disabled"} onchange="setStaffPerm('${u.id}','${p}',this.checked)" aria-label="${esc(PERM_NAME[p])} cho ${esc(u.name)}"></td>`).join("")}</tr>`).join("")}</table>`;
+  const accEd = can("users.accounts");
+  $("userTable").innerHTML = `<table class="small"><tr><th>Người dùng</th><th>Chức danh</th><th>Vai trò</th><th>Trạng thái</th><th>Đăng nhập gần nhất</th><th>Quyền hiệu lực</th><th></th></tr>${USERS.map((u) => { const n = u.role === "staff" ? (staffPerms[u.id] ? staffPerms[u.id].size : 0) : ROLE_PERMS[u.role].length; return `<tr><td><b>${esc(u.name)}</b>${u.id === me.id ? " <span class='chip info'>bạn</span>" : ""}<div class="small mono muted">${esc(u.username)}</div></td><td>${esc(u.title)}</td><td><span class="chip role-${u.role}">${ROLE_INFO[u.role][0]}</span></td><td>${u.active ? (u.mustChange ? "<span class='chip warn'>Chờ đổi MK tạm</span>" : "<span class='chip ok'>Hoạt động</span>") + (u.failed ? ` <span class='small' style='color:var(--red)'>sai ${u.failed}/${MAX_FAILED}</span>` : "") : "<span class='chip err'>Đã khóa</span>"}</td><td class="small">${u.lastLogin ? new Date(u.lastLogin).toLocaleString("vi-VN") : "—"}</td><td>${n} quyền</td><td>${(u.role === "staff" || !u.active) && u.id !== me.id ? `<button class="btn sec sm ${accEd ? "" : "nope"}" ${accEd ? "" : "disabled"} onclick="toggleUser('${u.id}')">${u.active ? "Khóa" : "Mở khóa"}</button>` : ""}</td></tr>`; }).join("")}</table>`;
+}
+
+/* ---------------- theme & nav ---------------- */
+function setTheme(t) { document.documentElement.dataset.theme = t; $("themeBtn").textContent = $("lgTheme").textContent = t === "dark" ? "☀" : "☾"; store.set("ga.theme", t); if (current === "khong-gian") drawMap(); }
+function toggleTheme() { setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"); }
+function toggleNav(force) { const a = $("app"); a.classList.toggle("navopen", force === undefined ? !a.classList.contains("navopen") : force); }
+
+/* ---------------- config, KB ---------------- */
+const KTT_OPTIONS = [["104.75", "104°45'"], ["105.00", "105°00'"], ["105.50", "105°30'"], ["106.00", "106°00'"], ["106.25", "106°15'"], ["107.00", "107°00'"], ["107.75", "107°45'"], ["108.25", "108°15'"], ["108.50", "108°30'"]];
+const config = { sys: "VN2000", ktt: "107.00", xa: "XA-A", tol: 3, snap: 0.3, outlier: 2000, grid: 0.25, minOverlap: 0.2 };
+const REQUIRED_FIELDS = ["TO", "SO_THUA", "LOAI_DAT", "CHU_SD"];
+const DOCS = { TD: "Bản trích đo địa chính", BBMG: "Biên bản xác định ranh giới, mốc giới", BTD: "Bảng tọa độ góc thửa", DDK: "Đơn đăng ký đất đai", NG: "Giấy tờ về nguồn gốc (nếu có)" };
+const BASE_REQUIRED_DOCS = ["TD", "BTD"];
+const LAND_CODES = ["ONT", "ODT", "LUC", "LUK", "LUN", "BHK", "NHK", "CLN", "RSX", "RPH", "RDD", "NTS", "DGT", "DTL", "DVH", "DYT", "DGD", "SKC", "TMD", "NTD", "SON", "MNC", "BCS", "TIN", "TON"];
+// Tóm tắt do GeoAgent biên soạn để tra cứu nội bộ; không phải trích văn bản gốc.
+const KB = [
+  { id: "LDD2024", t: "Luật Đất đai 2024 (Luật số 31/2024/QH15)", from: "2024-08-01", cert: "Đã đối chiếu", note: "Dự thảo Luật Đất đai (sửa đổi) đang được Quốc hội thảo luận (10/2026) — theo dõi ngày hiệu lực mới.", k: ["luat dat dai", "dang ky", "giay chung nhan", "gcn", "thu hoi", "quyen su dung", "bien dong"], s: "Khung pháp lý gốc về quản lý, sử dụng đất: đăng ký đất đai, cấp Giấy chứng nhận, hệ thống thông tin đất đai." },
+  { id: "ND101", t: "Nghị định 101/2024/NĐ-CP", from: "2024-08-01", cert: "Đã đối chiếu nguồn thứ cấp", k: ["dang ky", "cap giay chung nhan", "he thong thong tin dat dai", "dieu tra co ban", "ho so dia chinh"], s: "Quy định về điều tra cơ bản đất đai; đăng ký, cấp Giấy chứng nhận và hệ thống thông tin đất đai." },
+  { id: "TT26", t: "Thông tư 26/2024/TT-BTNMT", from: "2025-01-15", cert: "Đã đối chiếu nguồn thứ cấp", k: ["ky thuat do dac", "ban do dia chinh", "vn-2000", "vn2000", "toa do", "han sai", "luoi khong che", "trich do", "kinh tuyen truc"], s: "Quy định kỹ thuật đo đạc lập bản đồ địa chính; dùng hệ tọa độ quốc gia VN-2000. Hạn sai cụ thể phải tra văn bản gốc." },
+  { id: "TT09", t: "Thông tư 09/2024/TT-BTNMT", from: null, cert: "Ngày hiệu lực cần xác minh", k: ["csdl", "co so du lieu", "cau truc", "kieu thong tin", "noi dung du lieu", "giao nop"], s: "Nội dung, cấu trúc, kiểu thông tin của cơ sở dữ liệu quốc gia về đất đai — chuẩn để kiểm tra dữ liệu trước khi giao nộp." },
+  { id: "TT25", t: "Thông tư 25/2024/TT-BTNMT", from: null, partialRepeal: "2026-03-30", cert: "Ngày hiệu lực cần xác minh", k: ["quy trinh xay dung csdl", "co so du lieu", "quy trinh"], s: "Quy trình xây dựng cơ sở dữ liệu đất đai. Một phần bị bãi bỏ bởi TT 19/2026/TT-BNNMT từ 30/03/2026." },
+  { id: "TT19", t: "Thông tư 19/2026/TT-BNNMT", from: "2026-03-30", cert: "Đã đối chiếu nguồn thứ cấp", k: ["long ghep", "ma dinh danh", "dinh danh thua", "khoi luong trung lap", "do dac dang ky", "csdl"], s: "Lồng ghép đo đạc, đăng ký, lập hồ sơ địa chính và xây dựng CSDL; mã định danh thửa đất theo vị trí địa lý; khối lượng trùng lặp chỉ tính một lần." },
+  { id: "KH2959", t: "Kế hoạch 2959/KH-BNNMT-BCA (29/03/2026)", from: "2026-03-29", to: "2026-12-31", cert: "Đã đối chiếu nguồn thứ cấp", k: ["lam sach", "lam giau", "chien dich", "han", "31/12", "ke hoach"], s: "Kế hoạch làm giàu, làm sạch CSDL đất đai; hạn hoàn thành các phần việc năm 2026 là 31/12/2026." },
+  { id: "CV1435", t: "Công văn 1435/QLĐĐ-TKKKTTĐĐ (22/04/2026)", from: "2026-04-22", cert: "Đã đối chiếu nguồn thứ cấp", k: ["huong dan ky thuat", "duy tri", "hoan thien csdl", "csdl"], s: "Hướng dẫn kỹ thuật xây dựng, duy trì, hoàn thiện CSDL đất đai." },
+  { id: "TT70", t: "Thông tư 70/2025/TT-BNNMT", from: null, cert: "Ngày hiệu lực cần xác minh", k: ["dinh muc", "du toan", "kinh te ky thuat", "khoi luong"], s: "Định mức kinh tế – kỹ thuật đo đạc bản đồ; căn cứ lập dự toán cùng quyết định định mức của tỉnh." },
+  { id: "NQ21", t: "Nghị quyết 21-NQ/TW (28/07/2026)", from: "2026-07-28", cert: "Đã đối chiếu nguồn thứ cấp", k: ["quan tri dat dai", "du lieu so", "tri tue nhan tao", "ai", "dang ky bat buoc", "dinh huong"], s: "Định hướng sửa Luật Đất đai; quản trị đất đai trên nền dữ liệu số và AI; đăng ký bắt buộc mọi biến động đất đai." },
+  { id: "QD33", t: "Quyết định 33/2026/QĐ-TTg", from: "2026-08-15", cert: "Đã đối chiếu nguồn thứ cấp", k: ["rui ro cao", "ai", "tri tue nhan tao", "danh muc"], s: "Danh mục hệ thống AI rủi ro cao ở 6 lĩnh vực; đo đạc đất đai không nằm trong danh mục, nhưng vẫn phải minh bạch và có người chịu trách nhiệm." },
+];
+function vnDate(iso) { const [y, m, d] = iso.split("-"); return `${d}/${m}/${y}`; }
+function kbStatus(e, d) {
+  if (e.from && d < e.from) return { s: "Chưa có hiệu lực", c: "grey", ok: false };
+  if (e.to && d > e.to) return { s: "Hết thời hạn", c: "grey", ok: false };
+  if (e.partialRepeal && d >= e.partialRepeal) return { s: "Bị bãi bỏ một phần từ " + vnDate(e.partialRepeal), c: "warn", ok: true };
+  if (!e.from) return { s: "Áp dụng (ngày hiệu lực cần xác minh)", c: "warn", ok: true };
+  return { s: "Có hiệu lực", c: "ok", ok: true };
+}
+const cite = (id) => { const e = KB.find((x) => x.id === id); return e ? e.t : id; };
+
+/* ---------------- planning layers (giả lập, theo tọa độ các tờ) ---------------- */
+const PLAN = [
+  { id: "HL1", name: "Hành lang an toàn đường bộ (giả lập)", color: "#B4372B", fill: "rgba(180,55,43,.16)", basis: "Quy định hành lang an toàn công trình giao thông — tra văn bản hiện hành của tỉnh", poly: [[1820394, 561286], [1820394, 561312], [1820430, 561312], [1820402, 561286]] },
+  { id: "RG1", name: "Ranh đất rừng sản xuất (giả lập)", color: "#2E7D4F", fill: "rgba(46,125,79,.18)", basis: "Bản đồ quy hoạch ba loại rừng do chủ đầu tư cung cấp", poly: [[1820488, 561194], [1820506, 561194], [1820506, 561226], [1820492, 561214]] },
+  { id: "QH1", name: "Chỉ giới mở rộng đường xã (giả lập)", color: "#C98318", fill: "rgba(232,163,61,.22)", basis: "Quy hoạch sử dụng đất / quy hoạch giao thông xã do chủ đầu tư cung cấp", poly: [[1820428, 561251.5], [1820428, 561255.5], [1820472, 561255.5], [1820472, 561251.5]] },
+  { id: "HL2", name: "Hành lang an toàn lưới điện 22 kV (giả lập)", color: "#2B5FA8", fill: "rgba(43,95,168,.16)", basis: "Quy định bảo vệ an toàn công trình lưới điện cao áp — tra văn bản hiện hành", poly: [[1820554.5, 561290], [1820559.5, 561290], [1820559.5, 561420], [1820554.5, 561420]] },
+  { id: "HL3", name: "Hành lang bảo vệ kênh thủy lợi (giả lập)", color: "#1B8BA6", fill: "rgba(32,150,180,.18)", basis: "Quy định phạm vi bảo vệ công trình thủy lợi — tra văn bản hiện hành của tỉnh", poly: [[1820410, 561452], [1820410, 561457], [1820494, 561479], [1820494, 561474]] },
+];
+const HISTORY_RULES = [{ id: "R-H1", reason: "Hồ sơ bị trả vì thiếu biên bản xác định ranh giới, mốc giới (lần trả #07/2026, giả lập)", type: "required_doc", val: "BBMG", src: "Học từ lần trả hồ sơ", on: true }];
+const rules = [];
+
+/* ---------------- sheets (multi-tờ state) ---------------- */
+const sheets = {};
+function newSheet(id) { const d = DATASETS[id]; return { id, ds: d, raw: { pts: d.pts, par: d.par, att: d.att }, points: {}, meta: {}, parcels: [], attrs: {}, issues: [], decisions: {}, decLog: [], caught: {}, overrides: { ringReplace: {}, reorder: {}, attrFix: {}, ack: {} }, ran: false, lastRun: null, signed: null, selected: null, timings: {} }; }
+Object.keys(DATASETS).forEach((id) => (sheets[id] = newSheet(id)));
+let activeId = "12";
+const S = () => sheets[activeId];
+
+/* ---------------- geometry ---------------- */
+function ringArea(c) { let s = 0; const ox = c[0][0], oy = c[0][1]; for (let i = 0; i < c.length; i++) { const a = c[i], b = c[(i + 1) % c.length]; s += (a[1] - oy) * (b[0] - ox) - (b[1] - oy) * (a[0] - ox); } return Math.abs(s) / 2; }
+function perim(c) { let s = 0; for (let i = 0; i < c.length; i++) { const a = c[i], b = c[(i + 1) % c.length]; s += Math.hypot(a[0] - b[0], a[1] - b[1]); } return s; }
+function centroid(c) { let x = 0, y = 0; c.forEach((p) => { x += p[0]; y += p[1]; }); return [x / c.length, y / c.length]; }
+function bbox(c) { const a = [Infinity, Infinity, -Infinity, -Infinity]; c.forEach((p) => { a[0] = Math.min(a[0], p[0]); a[1] = Math.min(a[1], p[1]); a[2] = Math.max(a[2], p[0]); a[3] = Math.max(a[3], p[1]); }); return a; }
+function pip(pt, c) { let ins = false; for (let i = 0, j = c.length - 1; i < c.length; j = i++) { const xi = c[i][1], yi = c[i][0], xj = c[j][1], yj = c[j][0]; if (((yi > pt[0]) !== (yj > pt[0])) && (pt[1] < (xj - xi) * (pt[0] - yi) / (yj - yi) + xi)) ins = !ins; } return ins; }
+function segX(p1, p2, p3, p4) { const d = (a, b, c) => (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]); const d1 = d(p3, p4, p1), d2 = d(p3, p4, p2), d3 = d(p1, p2, p3), d4 = d(p1, p2, p4); return ((d1 > 0) !== (d2 > 0)) && ((d3 > 0) !== (d4 > 0)) && d1 !== 0 && d2 !== 0 && d3 !== 0 && d4 !== 0; }
+function selfIntersects(c) { const n = c.length; for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) { if (j - i <= 1 || (i === 0 && j === n - 1)) continue; if (segX(c[i], c[(i + 1) % n], c[j], c[(j + 1) % n])) return true; } return false; }
+function interArea(a, b, step) { const A = bbox(a), B = bbox(b); const x0 = Math.max(A[0], B[0]), y0 = Math.max(A[1], B[1]), x1 = Math.min(A[2], B[2]), y1 = Math.min(A[3], B[3]); if (x0 >= x1 || y0 >= y1) return 0; let n = 0; for (let x = x0 + step / 2; x < x1; x += step) for (let y = y0 + step / 2; y < y1; y += step) if (pip([x, y], a) && pip([x, y], b)) n++; return n * step * step; }
+function orderByAngle(c) { const [cx, cy] = centroid(c); return c.map((p, i) => [Math.atan2(p[0] - cx, p[1] - cy), i]).sort((u, v) => u[0] - v[0]).map((u) => u[1]); }
+function parseMeta(text) { const m = {}; String(text).replace(/^﻿/, "").split(/\r?\n/).filter((l) => l.trim().startsWith("#")).forEach((l) => l.trim().slice(1).split(";").forEach((kv) => { const [k, v] = kv.split("="); if (k && v !== undefined) m[k.trim().toUpperCase()] = v.trim(); })); return m; }
+function rows(text) { return String(text).replace(/^﻿/, "").split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith("#")); }
+
+/* ---------------- issues ---------------- */
+function addIssue(o) { const st = S(); o.key = o.key || (o.agent + ":" + o.code + ":" + (o.parcel || o.point || "") + ":" + (o.extra || "")); o.sev = o.sev || "canh_bao"; if (st.overrides.ack[o.key]) { o.sev = "thong_tin"; o.acked = true; } st.issues.push(o); return o; }
+const SEV_TXT = { loi: "Lỗi", canh_bao: "Cảnh báo", thong_tin: "Thông tin" };
+const SEV_CHIP = { loi: "err", canh_bao: "warn", thong_tin: "info" };
+const CODE_GROUP = (c) => ({ DUP_ID: "Số liệu điểm", WGS: "Hệ tọa độ", RANGE: "Hệ tọa độ", OUTLIER: "Số liệu điểm", PARSE: "Số liệu điểm", KTT: "Hệ tọa độ", SYS: "Hệ tọa độ", NO_META: "Hệ tọa độ", MISSING_PT: "Topology", OPEN: "Topology", SELFX: "Topology", OVERLAP: "Topology", SLIVER: "Topology", AREA_DEV: "Diện tích so với GCN", DOCS: "Thành phần hồ sơ", MINAREA: "Thành phần hồ sơ", LANDCODE: "Thuộc tính CSDL", DUP_SO: "Thuộc tính CSDL", NO_ATTR: "Thuộc tính CSDL", ORPHAN_ATTR: "Thuộc tính CSDL" }[c] || (c.startsWith("PLAN_") ? "Xung đột quy hoạch" : c.startsWith("FIELD_") ? "Thuộc tính CSDL" : "Khác"));
+
+/* ---------------- AGENT 01 ---------------- */
+function agent01() {
+  const st = S(), t0 = performance.now(); const meta = parseMeta(st.raw.pts); st.meta = meta;
+  const pts = {}; const seen = {}; const pr = rows(st.raw.pts); const head = pr.shift() || "";
+  if (head.split(",").length < 3) addIssue({ agent: "A1", code: "PARSE", sev: "loi", point: "tiêu đề", msg: `Tiêu đề tệp điểm phải là TEN,X,Y,H,MA phân tách bằng dấu phẩy (đang đọc: “${head.slice(0, 40)}”). Excel tiếng Việt hay lưu dấu chấm phẩy.`, basis: "Quy ước định dạng dữ liệu đầu vào" });
+  pr.forEach((l, i) => {
+    const f = l.split(",").map((s) => s.trim()); const id = f[0]; const x = parseFloat(f[1]), y = parseFloat(f[2]), h = parseFloat(f[3]);
+    if (!id || isNaN(x) || isNaN(y)) { addIssue({ agent: "A1", code: "PARSE", sev: "loi", point: id || "dòng " + (i + 2), extra: i, msg: `Không đọc được tọa độ ở dòng ${i + 2}`, basis: "Quy tắc đọc dữ liệu" }); return; }
+    if (seen[id]) { addIssue({ agent: "A1", code: "DUP_ID", sev: "loi", point: id, msg: `Tên điểm ${id} xuất hiện 2 lần với tọa độ khác nhau (lệch ${fmt(Math.hypot(x - seen[id].x, y - seen[id].y), 2)} m)`, basis: "Quy tắc nội bộ: tên điểm là duy nhất trong tờ", fix: { kind: "manual", text: "Kiểm tra sổ đo ngoại nghiệp, đổi tên một trong hai điểm" } }); return; }
+    const p = { id, x, y, h, code: f[4] || "", flags: [] }; seen[id] = p; pts[id] = p;
+  });
+  if (!meta.HE_TOA_DO) addIssue({ agent: "A1", code: "NO_META", sev: "canh_bao", msg: "Tệp điểm không khai báo hệ tọa độ / kinh tuyến trục (#HE_TOA_DO, #KTT)", basis: cite("TT26") + " — hệ VN-2000", fix: { kind: "manual", text: "Xuất lại tệp từ phần mềm đo kèm siêu dữ liệu hệ tọa độ" } });
+  else if (meta.HE_TOA_DO.toUpperCase() !== config.sys) addIssue({ agent: "A1", code: "SYS", sev: "loi", msg: `Tệp khai báo hệ ${meta.HE_TOA_DO}, gói thầu yêu cầu ${config.sys}`, basis: cite("TT26") });
+  if (meta.KTT && Math.abs(parseFloat(meta.KTT) - parseFloat(config.ktt)) > 1e-6) addIssue({ agent: "A1", code: "KTT", sev: "loi", msg: `Kinh tuyến trục trong tệp (${meta.KTT}°) khác cấu hình gói thầu (${config.ktt}°) — toàn bộ tọa độ có thể lệch hệ`, basis: cite("TT26") + " — kinh tuyến trục theo tỉnh; cần kiểm tra quy định sau sáp nhập" });
+  const vals = Object.values(pts); const med = (a) => { const s = [...a].sort((u, v) => u - v); return s[Math.floor(s.length / 2)]; };
+  const mx = med(vals.map((p) => p.x)), my = med(vals.map((p) => p.y));
+  vals.forEach((p) => {
+    if (Math.abs(p.x) <= 90 && Math.abs(p.y) <= 180) { p.flags.push("wgs"); addIssue({ agent: "A1", code: "WGS", sev: "loi", point: p.id, msg: `Điểm ${p.id} có giá trị dạng độ (${p.x}, ${p.y}) — nghi tọa độ WGS-84 chưa chuyển sang VN-2000`, basis: "Quy tắc nội bộ: không trộn hệ tọa độ trong một tệp", fix: { kind: "manual", text: "Chuyển đổi bằng phần mềm chuyển đổi tọa độ đã được chấp nhận, không sửa tay" } }); return; }
+    if (p.x < 900000 || p.x > 2700000 || p.y < 100000 || p.y > 900000) { p.flags.push("range"); addIssue({ agent: "A1", code: "RANGE", sev: "loi", point: p.id, msg: `Điểm ${p.id} (X=${p.x}, Y=${p.y}) nằm ngoài miền giá trị hợp lý của VN-2000 múi 3° — thường do dấu phẩy thập phân kiểu Excel`, basis: "Quy tắc nội bộ kiểm tra miền giá trị", fix: { kind: "manual", text: "Xuất lại tệp với dấu chấm thập phân" } }); return; }
+    const d = Math.hypot(p.x - mx, p.y - my);
+    if (d > config.outlier) { p.flags.push("out"); addIssue({ agent: "A1", code: "OUTLIER", sev: "loi", point: p.id, msg: `Điểm ${p.id} cách tâm khu đo ${fmt0(d)} m (> ${fmt0(config.outlier)} m) — nghi gõ nhầm chữ số`, basis: "Quy tắc nội bộ: phát hiện điểm ngoại lai", fix: { kind: "manual", text: "Đối chiếu sổ đo/tệp gốc của máy" } }); }
+  });
+  st.points = pts;
+  const parcels = [];
+  rows(st.raw.par).slice(1).forEach((l) => {
+    const [id, ds] = l.split(",").map((s) => s.trim()); if (!id || !ds) return;
+    let ring = ds.split("|").map((s) => s.trim()).filter(Boolean);
+    if (st.overrides.ringReplace[id]) ring = ring.map((pid) => st.overrides.ringReplace[id][pid] || pid);
+    if (st.overrides.reorder[id]) ring = st.overrides.reorder[id];
+    const p = { id, ring, coords: [], area: null };
+    const missing = ring.filter((pid) => !pts[pid] || pts[pid].flags.length);
+    if (missing.length) { addIssue({ agent: "A1", code: "MISSING_PT", sev: "loi", parcel: id, msg: `Thửa ${id} tham chiếu điểm không hợp lệ/không tồn tại: ${missing.join(", ")}`, basis: "Quy tắc nội bộ: thửa phải khép kín từ điểm đo hợp lệ", fix: { kind: "manual", text: "Bổ sung điểm từ sổ đo ngoại nghiệp hoặc đo bổ sung" } }); p.invalid = true; }
+    else {
+      p.coords = ring.map((pid) => [pts[pid].x, pts[pid].y]);
+      if (p.coords.length < 3) { addIssue({ agent: "A1", code: "OPEN", sev: "loi", parcel: id, msg: `Thửa ${id} không khép kín (ít hơn 3 đỉnh)`, basis: "Quy tắc topology" }); p.invalid = true; }
+      else if (selfIntersects(p.coords)) {
+        const ord = orderByAngle(p.coords).map((i) => ring[i]);
+        addIssue({ agent: "A1", code: "SELFX", sev: "loi", parcel: id, msg: `Ranh thửa ${id} tự cắt (thứ tự đỉnh sai) — diện tích tính được không có nghĩa`, basis: "Quy tắc topology: ranh thửa là đa giác đơn", fix: { kind: "reorder", risk: "thấp", text: `Sắp lại thứ tự đỉnh theo góc quanh trọng tâm: ${ord.join(" → ")}`, ring: ord } });
+        p.invalid = true; p.area = ringArea(p.coords);
+      } else { p.area = ringArea(p.coords); p.perim = perim(p.coords); }
+    }
+    parcels.push(p);
+  });
+  const valid = parcels.filter((p) => !p.invalid);
+  const owner = {}; valid.forEach((p) => p.ring.forEach((pid) => { (owner[pid] = owner[pid] || []).push(p.id); }));
+  const used = Object.keys(owner);
+  for (let i = 0; i < used.length; i++) for (let j = i + 1; j < used.length; j++) {
+    const a = pts[used[i]], b = pts[used[j]]; const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (d > 0.001 && d <= config.snap) {
+      const [keep, drop] = a.id < b.id ? [a, b] : [b, a]; const affected = owner[drop.id];
+      addIssue({ agent: "A1", code: "SLIVER", sev: "canh_bao", point: drop.id, parcel: affected.join(","), msg: `Đỉnh ${drop.id} (thửa ${affected.join(", ")}) lệch ${fmt(d * 100, 0)} cm so với đỉnh ${keep.id} — tạo khe hở/chồng mỏng giữa hai thửa`, basis: `Quy tắc nội bộ: ngưỡng bắt dính ${fmt(config.snap, 2)} m`, fix: { kind: "snap", risk: "thấp", text: `Bắt dính ${drop.id} → ${keep.id} cho thửa ${affected.join(", ")} (dịch ${fmt(d * 100, 0)} cm)`, parcels: affected, from: drop.id, to: keep.id } });
+    }
+  }
+  for (let i = 0; i < valid.length; i++) for (let j = i + 1; j < valid.length; j++) {
+    const ov = interArea(valid[i].coords, valid[j].coords, config.grid);
+    if (ov >= config.minOverlap) addIssue({ agent: "A1", code: "OVERLAP", sev: "loi", parcel: valid[i].id + "," + valid[j].id, extra: valid[j].id, msg: `Thửa ${valid[i].id} chồng lấn thửa ${valid[j].id} khoảng ${fmt(ov, 1)} m² (ước tính lưới ${fmt(config.grid, 2)} m)`, basis: "Quy tắc topology: các thửa không chồng lấn", fix: { kind: "manual", text: "Kiểm tra lại ngoại nghiệp / biên bản ranh giới; lệch vượt ngưỡng bắt dính nên không tự sửa" } });
+  }
+  st.parcels = parcels; st.timings.A1 = performance.now() - t0;
+}
+/* ---------------- AGENT 02 ---------------- */
+function activeRules() { return [...HISTORY_RULES, ...rules].filter((r) => r.on); }
+function requiredDocs() { const s = new Set(BASE_REQUIRED_DOCS); activeRules().filter((r) => r.type === "required_doc").forEach((r) => s.add(r.val)); return [...s]; }
+function agent02() {
+  const st = S(), t0 = performance.now();
+  st.parcels.forEach((p) => { if (p.invalid || !p.coords.length) return; PLAN.forEach((L) => { const a = interArea(p.coords, L.poly, config.grid); if (a >= 0.5) addIssue({ agent: "A2", code: "PLAN_" + L.id, sev: "canh_bao", parcel: p.id, msg: `Thửa ${p.id} giao ${L.name.replace(" (giả lập)", "")}: ${fmt(a, 1)} m² (${fmt(a / p.area * 100, 1)}% diện tích)`, basis: L.basis, fix: { kind: "ack", risk: "trung bình", text: "Xác nhận đã thể hiện phần diện tích trong hành lang/quy hoạch trên bản trích đo và ghi chú hồ sơ" } }); }); });
+  const req = requiredDocs();
+  Object.values(st.attrs).forEach((a) => {
+    const have = (a.THANH_PHAN || "").split(";").map((s) => s.trim()).filter(Boolean); const miss = req.filter((d) => !have.includes(d));
+    if (miss.length) { const fr = activeRules().filter((r) => r.type === "required_doc" && miss.includes(r.val)); addIssue({ agent: "A2", code: "DOCS", sev: "loi", parcel: a.THUA, extra: miss.join("+"), msg: `Hồ sơ thửa ${a.THUA} thiếu: ${miss.map((d) => DOCS[d] || d).join("; ")}`, basis: fr.length ? `Quy tắc học từ lần trả hồ sơ: “${fr[0].reason}”` : "Bảng thành phần hồ sơ do công ty cấu hình theo quy định của tỉnh", fix: { kind: "manual", text: "Bổ sung thành phần hồ sơ trước khi nộp" } }); }
+  });
+  activeRules().filter((r) => r.type === "min_area").forEach((r) => st.parcels.forEach((p) => { if (p.area && !p.invalid && p.area < +r.val) addIssue({ agent: "A2", code: "MINAREA", sev: "canh_bao", parcel: p.id, extra: r.val, msg: `Thửa ${p.id} có diện tích ${fmt(p.area, 1)} m² < ${r.val} m² theo quy tắc của tỉnh`, basis: `Quy tắc học từ lần trả hồ sơ: “${r.reason}”`, fix: { kind: "manual", text: "Rà soát điều kiện tách/hợp thửa theo quy định của tỉnh" } }); }));
+  st.timings.A2 = performance.now() - t0;
+}
+/* ---------------- AGENT 03 ---------------- */
+function lev(a, b) { const m = Array.from({ length: a.length + 1 }, (_, i) => [i]); for (let j = 1; j <= b.length; j++) m[0][j] = j; for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) m[i][j] = Math.min(m[i - 1][j] + 1, m[i][j - 1] + 1, m[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return m[a.length][b.length]; }
+function parseAttrs() { const st = S(); const r = rows(st.raw.att); const head = (r.shift() || "").split(",").map((s) => s.trim()); const out = {}; r.forEach((l) => { const f = l.split(","); const o = {}; head.forEach((h, i) => (o[h] = (f[i] || "").trim())); if (st.overrides.attrFix[o.THUA]) Object.assign(o, st.overrides.attrFix[o.THUA]); if (o.THUA) out[o.THUA] = o; }); st.attrs = out; }
+function agent03() {
+  const st = S(), t0 = performance.now();
+  const reqFields = new Set(REQUIRED_FIELDS); activeRules().filter((r) => r.type === "required_field").forEach((r) => reqFields.add(r.val));
+  const bySo = {};
+  Object.values(st.attrs).forEach((a) => {
+    const p = st.parcels.find((x) => x.id === a.THUA);
+    if (!p) addIssue({ agent: "A3", code: "ORPHAN_ATTR", sev: "loi", parcel: a.THUA, msg: `Bản ghi thuộc tính ${a.THUA} không có thửa không gian tương ứng`, basis: "Đối soát không gian – thuộc tính", fix: { kind: "manual", text: "Xác minh thửa đã hợp/tách hay nhập nhầm mã; xóa hoặc bổ sung hình thửa" } });
+    [...reqFields].forEach((f) => { if (!a[f]) addIssue({ agent: "A3", code: "FIELD_" + f, sev: "loi", parcel: a.THUA, msg: `Thửa ${a.THUA} thiếu trường bắt buộc ${f}`, basis: cite("TT09") + " — trường bắt buộc (cấu hình)", fix: { kind: "manual", text: "Bổ sung từ hồ sơ kê khai / xác minh thực địa" } }); });
+    if (a.LOAI_DAT && !LAND_CODES.includes(a.LOAI_DAT)) {
+      const near = LAND_CODES.filter((c) => lev(a.LOAI_DAT, c) <= 1);
+      addIssue({ agent: "A3", code: "LANDCODE", sev: "loi", parcel: a.THUA, msg: `Mã loại đất “${a.LOAI_DAT}” của thửa ${a.THUA} không thuộc danh mục${near.length > 1 ? ` — mơ hồ giữa ${near.join(", ")}` : ""}`, basis: "Danh mục mã loại đất dùng trong pilot — cần đối chiếu danh mục hiện hành",
+        fix: near.length === 1 ? { kind: "attr", risk: "thấp", text: `Sửa thành “${near[0]}” (khác 1 ký tự)`, parcel: a.THUA, field: "LOAI_DAT", value: near[0] } : { kind: "manual", text: near.length ? `Không tự sửa vì có ${near.length} mã gần đúng (${near.join(", ")}) — xác định theo hồ sơ` : "Xác định lại loại đất theo hồ sơ" } });
+    }
+    if (a.SO_THUA) (bySo[a.TO + "/" + a.SO_THUA] = bySo[a.TO + "/" + a.SO_THUA] || []).push(a.THUA);
+    if (p && p.area && !p.invalid && a.DT_PHAP_LY) { const dt = parseFloat(a.DT_PHAP_LY); const dev = (p.area - dt) / dt * 100; a._dev = dev; if (Math.abs(dev) > config.tol) addIssue({ agent: "A3", code: "AREA_DEV", sev: "canh_bao", parcel: a.THUA, msg: `Diện tích đo mới ${fmt(p.area, 1)} m² lệch ${fmt(dev, 1)}% so với GCN (${fmt(dt, 1)} m²)`, basis: `Ngưỡng nội bộ ${config.tol}% — xử lý biến động theo quy định đăng ký`, fix: { kind: "ack", risk: "trung bình", text: "Xác nhận nguyên nhân (đo lại / sai số bản đồ cũ / biến động) và ghi vào hồ sơ" } }); }
+    if (!a.DT_PHAP_LY && p) addIssue({ agent: "A3", code: "NEWREG", sev: "thong_tin", parcel: a.THUA, msg: `Thửa ${a.THUA} chưa có diện tích pháp lý (đăng ký lần đầu?) — dùng diện tích đo mới ${fmt(p.area, 1)} m²`, basis: cite("ND101") });
+  });
+  Object.entries(bySo).forEach(([k, ids]) => { if (ids.length > 1) addIssue({ agent: "A3", code: "DUP_SO", sev: "loi", parcel: ids.join(","), extra: k, msg: `Trùng số thửa ${k} giữa ${ids.join(" và ")}`, basis: "Quy tắc: số thửa duy nhất trong một tờ", fix: { kind: "manual", text: "Đánh lại số thửa theo quy định đánh số" } }); });
+  st.parcels.forEach((p) => { if (!st.attrs[p.id]) addIssue({ agent: "A3", code: "NO_ATTR", sev: "loi", parcel: p.id, msg: `Thửa ${p.id} có hình học nhưng chưa có bản ghi thuộc tính`, basis: "Đối soát không gian – thuộc tính", fix: { kind: "manual", text: "Bổ sung bản ghi thuộc tính từ hồ sơ kê khai" } }); });
+  st.timings.A3 = performance.now() - t0;
+}
+function toNo(st = S()) { return st.meta.TO || (Object.values(st.attrs).find((a) => a.TO) || {}).TO || st.id; }
+function tmpCode(p) { const a = S().attrs[p.id]; if (!a || !p.coords.length) return "—"; const [cx, cy] = centroid(p.coords); return `${config.xa}-${a.TO || "?"}-${a.SO_THUA}-${Math.round(cx)}${Math.round(cy)}`; }
+
+/* ---------------- AGENT 04 & metrics ---------------- */
+function issuesOf(id, st = S()) { return st.issues.filter((i) => i.parcel && i.parcel.split(",").includes(id)); }
+function parcelStatus(id, st = S()) { const iss = issuesOf(id, st).filter((i) => !i.acked); if (iss.some((i) => i.sev === "loi")) return "loi"; if (iss.some((i) => i.sev === "canh_bao")) return "canh_bao"; return "ok"; }
+function riskScore(id, st = S()) { let s = 0; issuesOf(id, st).filter((i) => !i.acked).forEach((i) => { s += i.sev === "loi" ? (i.code === "DOCS" ? 25 : 40) : i.sev === "canh_bao" ? 15 : 0; }); return Math.min(100, s); }
+function riskLabel(s) { return s === 0 ? ["Sẵn sàng nộp", "ok"] : s <= 20 ? ["Cần xem lại", "warn"] : s <= 50 ? ["Nguy cơ bị trả", "warn"] : ["Nguy cơ bị trả cao", "err"]; }
+function qaChecks() {
+  const I = S().issues.filter((i) => !i.acked); const has = (codes) => I.filter((i) => codes.includes(i.code));
+  return [
+    ["Hệ tọa độ và kinh tuyến trục khớp cấu hình", has(["SYS", "KTT", "NO_META"]), "A1"],
+    ["Không trùng tên điểm, không điểm ngoại lai / sai hệ / sai định dạng", has(["DUP_ID", "WGS", "RANGE", "OUTLIER", "PARSE"]), "A1"],
+    ["100% thửa khép kín, không tự cắt, đủ điểm", has(["MISSING_PT", "OPEN", "SELFX"]), "A1"],
+    ["Không chồng lấn, không khe hở giữa thửa", has(["OVERLAP", "SLIVER"]), "A1"],
+    ["Diện tích đo mới trong ngưỡng so với GCN (hoặc đã xác nhận)", has(["AREA_DEV"]), "A3"],
+    ["Xung đột quy hoạch đã được xác nhận trên hồ sơ", I.filter((i) => i.code.startsWith("PLAN_")), "A2"],
+    ["Thuộc tính đủ trường bắt buộc, có bản ghi cho mọi thửa", I.filter((i) => i.code.startsWith("FIELD_") || ["NO_ATTR", "ORPHAN_ATTR"].includes(i.code)), "A3"],
+    ["Mã loại đất hợp lệ; số thửa không trùng", has(["LANDCODE", "DUP_SO"]), "A3"],
+    ["Thành phần hồ sơ đủ theo bảng cấu hình + quy tắc học", has(["DOCS", "MINAREA"]), "A2"],
+  ];
+}
+function quality(st = S()) {
+  const n = st.parcels.length || 1;
+  const bad = (codes) => new Set(st.issues.filter((i) => !i.acked && codes.some((c) => i.code.startsWith(c))).flatMap((i) => (i.parcel || "").split(",").filter((x) => st.parcels.some((p) => p.id === x))));
+  return [
+    ["Đúng", (n - bad(["MISSING_PT", "OPEN", "SELFX", "OVERLAP", "LANDCODE", "SLIVER"]).size) / n, "Hình học hợp lệ, không chồng lấn/khe hở, mã loại đất đúng danh mục"],
+    ["Đủ", (n - bad(["FIELD_", "NO_ATTR", "DOCS"]).size) / n, "Đủ trường bắt buộc và thành phần hồ sơ"],
+    ["Sạch", (n - bad(["DUP_SO", "OVERLAP"]).size) / n * (st.issues.some((i) => i.code === "ORPHAN_ATTR" && !i.acked) ? 0.97 : 1), "Không trùng số thửa, không bản ghi mồ côi"],
+    ["Sống", (n - bad(["AREA_DEV", "PLAN_"]).size) / n, "Thuộc tính khớp hiện trạng đo mới; xung đột quy hoạch đã xác nhận"],
+  ].map(([k, v, d]) => [k, Math.max(0, v), d]);
+}
+const TS = [["Nhập số liệu, tọa độ", 12, 92], ["Topology, tính diện tích", 20, 90], ["Đối chiếu quy hoạch", 10, 75], ["Lập hồ sơ, mẫu biểu", 25, 65], ["Chuẩn hóa, làm sạch CSDL", 15, 65], ["Biên tập bản đồ hoàn thiện", 20, 45]];
+const tsVals = TS.map((r) => ({ base: r[1], auto: r[2] }));
+function tsCalc(n) { let b = 0, a = 0; tsVals.forEach((v) => { b += v.base; a += v.base * (1 - v.auto / 100); }); return { base: b, after: a, save: b ? 1 - a / b : 0, hours: (b - a) * n / 60, per1000: (b - a) * 1000 / 60 }; }
+
+/* ---------------- audit (global, SHA-256 chain) ---------------- */
+const AUDIT = [];
+async function sha(s) { try { const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)); return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join(""); } catch (e) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return "fnv-" + (h >>> 0).toString(16); } }
+let auditChain = Promise.resolve();
+function audit(action, detail, actor) {
+  const a = actor || who(); const sheet = "Tờ " + activeId;
+  auditChain = auditChain.then(async () => { const prev = AUDIT.length ? AUDIT[AUDIT.length - 1].hash : "GENESIS"; const rec = { t: new Date().toISOString(), actor: a, sheet, action, detail, prev }; rec.hash = await sha([prev, rec.t, a, sheet, action, detail].join("|")); AUDIT.push(rec); if (current === "nhat-ky") renderAudit(); });
+}
+async function verifyChain() { await auditChain; let prev = "GENESIS", bad = -1; for (let i = 0; i < AUDIT.length; i++) { const r = AUDIT[i]; const h = await sha([prev, r.t, r.actor, r.sheet, r.action, r.detail].join("|")); if (r.prev !== prev || h !== r.hash) { bad = i; break; } prev = r.hash; } $("chainRes").innerHTML = bad < 0 ? `<span class="chip ok">Chuỗi hợp lệ · ${AUDIT.length} bản ghi</span>` : `<span class="chip err">Chuỗi bị sửa tại bản ghi #${bad + 1}</span>`; }
+
+/* ---------------- pipeline ---------------- */
+function computeAll() {
+  const st = S(); st.issues = []; agent01(); parseAttrs(); agent02(); agent03();
+  const t0 = performance.now(); qaChecks(); st.timings.A4 = performance.now() - t0;
+  st.issues.filter((i) => i.sev !== "thong_tin" || i.acked).forEach((i) => { if (!st.caught[i.key]) st.caught[i.key] = CODE_GROUP(i.code); });
+  st.ran = true; st.lastRun = new Date();
+}
+const STEPS = [["00", "Thu số liệu", "Đọc 3 tệp, kiểm tra định dạng", "Điều phối"], ["01", "Xử lý không gian", "Tọa độ, topology, diện tích", "Agent 01"], ["02", "Kiểm pháp lý", "Quy hoạch, thành phần hồ sơ", "Agent 02"], ["03", "Chuẩn hóa CSDL", "Thuộc tính, mã thửa, đối soát", "Agent 03"], ["04", "KTNT nội bộ", "Bảng kiểm, biên bản", "Agent 04"], ["✓", "Ký và xuất", "Kỹ sư ký — con người", "Con người"]];
+function renderPipe(active = -1, doneUpTo = -1) { $("pipe").innerHTML = STEPS.map((s, i) => `<div class="step ${i === 5 ? "human" : ""} ${i === active ? "run" : ""} ${i <= doneUpTo ? "done" : ""}"><div class="n">${s[0]} · ${s[3]}</div><div class="t">${s[1]}</div><div class="s">${s[2]}</div><div class="s" style="margin-top:6px">${i <= doneUpTo && i < 5 ? stepResult(i) : ""}</div></div>`).join(""); }
+function stepResult(i) { const st = S(); const c = (ag) => { const L = st.issues.filter((x) => x.agent === ag && !x.acked); return `${L.filter((x) => x.sev === "loi").length} lỗi · ${L.filter((x) => x.sev === "canh_bao").length} cảnh báo`; }; if (i === 0) return `${Object.keys(st.points).length} điểm · ${st.parcels.length} thửa · ${Object.keys(st.attrs).length} bản ghi`; if (i <= 3) return c("A" + i); if (i === 4) { const q = qaChecks(); return `${q.filter((x) => !x[1].length).length}/${q.length} mục đạt`; } return ""; }
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+function logLine(cls, txt) { const el = $("log"); el.insertAdjacentHTML("beforeend", `<div class="${cls}">[${new Date().toLocaleTimeString("vi-VN")}] ${txt}</div>`); el.scrollTop = el.scrollHeight; }
+let running = false;
+async function runPipeline(animate, reason) {
+  if (!reason && !guard("run", "Chạy GeoAgent")) return;
+  if (running) return; running = true; const st = S();
+  readInputs(); if (animate) { location.hash = "dieu-phoi"; $("log").innerHTML = ""; }
+  const T0 = performance.now(); computeAll();
+  audit(reason ? "Chạy lại tự động" : "Chạy quy trình", `${st.parcels.length} thửa; ${st.issues.length} phát hiện; quy tắc: ${activeRules().length}${reason ? " — sau: " + reason : ""}`);
+  if (animate) {
+    const cnt = (ag, sev) => st.issues.filter((x) => x.agent === ag && x.sev === sev && !x.acked).length;
+    renderPipe(0, -1); logLine("h", `Điều phối (${esc(who())}): nhận Tờ ${esc(toNo())} · Xã thí điểm A — tách thành 4 nhóm việc`); await sleep(320);
+    logLine("a0", `Điều phối: đọc ${Object.keys(st.points).length} điểm, ${st.parcels.length} thửa, ${Object.keys(st.attrs).length} bản ghi · siêu dữ liệu: ${esc(Object.entries(st.meta).map(([k, v]) => k + "=" + v).join("; ") || "không có")}`); renderPipe(1, 0); await sleep(420);
+    logLine("a1", `Agent 01: hệ ${config.sys}, KTT ${config.ktt}° · dựng ${st.parcels.length} thửa · diện tích theo công thức Gauss · kiểm tự cắt, chồng lấn (lưới ${fmt(config.grid, 2)} m), bắt dính ≤ ${fmt(config.snap, 2)} m`);
+    logLine("a1", `Agent 01: ${cnt("A1", "loi")} lỗi, ${cnt("A1", "canh_bao")} cảnh báo · ${fmt(st.timings.A1, 0)} ms`); renderPipe(2, 1); await sleep(420);
+    logLine("h", `Cổng 1 · kỹ sư xác nhận thửa: ${pending("A1").length} đề xuất chờ duyệt — giữ trong hàng đợi, tiếp tục các tác tử độc lập`); await sleep(220);
+    logLine("a2", `Agent 02: chồng ${PLAN.length} lớp quy hoạch · thành phần bắt buộc: ${requiredDocs().join(", ")} · áp ${activeRules().length} quy tắc học`);
+    logLine("a2", `Agent 02: ${cnt("A2", "loi")} lỗi, ${cnt("A2", "canh_bao")} cảnh báo · ${fmt(st.timings.A2, 0)} ms`); renderPipe(3, 2); await sleep(420);
+    logLine("a3", `Agent 03: đối soát ${Object.keys(st.attrs).length} bản ghi với ${st.parcels.length} thửa · trường bắt buộc, mã loại đất, trùng số thửa, lệch diện tích > ${config.tol}%`);
+    logLine("a3", `Agent 03: ${cnt("A3", "loi")} lỗi, ${cnt("A3", "canh_bao")} cảnh báo · ${fmt(st.timings.A3, 0)} ms`); renderPipe(4, 3); await sleep(420);
+    const q = qaChecks(); logLine("a4", `Agent 04: bảng kiểm KTNT ${q.filter((x) => !x[1].length).length}/${q.length} mục đạt · ${st.parcels.filter((p) => riskScore(p.id) === 0).length}/${st.parcels.length} thửa sẵn sàng nộp`);
+    renderPipe(5, 4); await sleep(220);
+    logLine("h", `Cổng 2–3: ${pending().length} đề xuất chờ quyết định; ${blocking().length} lỗi chặn ký nộp. Thời gian máy: ${fmt(performance.now() - T0, 0)} ms`);
+  } else renderPipe(-1, 4);
+  running = false; renderAll();
+}
+
+/* ---------------- queue ---------------- */
+function pending(agent, st = S()) { return st.issues.filter((i) => i.fix && i.fix.kind !== "manual" && !st.decisions[i.key] && !i.acked && (!agent || i.agent === agent)); }
+function blocking(st = S()) { return st.issues.filter((i) => i.sev === "loi" && !i.acked); }
+const cssKey = (k) => k.replace(/[^a-zA-Z0-9]/g, "_");
+function decide(key, ok) {
+  const st = S(); const i = st.issues.find((x) => x.key === key); if (!i) return;
+  if (!guard("approve." + i.agent, (ok ? "Duyệt" : "Từ chối") + " đề xuất " + i.agent)) return;
+  const note = ($("note-" + cssKey(key)) || {}).value || "";
+  st.decisions[key] = ok ? "duyet" : "tuchoi"; st.decLog.push({ text: i.fix.text, ok, note, by: who(), t: new Date() });
+  if (ok) applyFix(i);
+  audit(ok ? "Duyệt đề xuất" : "Từ chối đề xuất", `${i.fix.text}${note ? " · Ghi chú: " + note : ""}`);
+  runPipeline(false, "quyết định duyệt"); toast(ok ? "Đã duyệt và chạy lại các tác tử" : "Đã từ chối — giữ nguyên dữ liệu");
+}
+function applyFix(i) { const st = S(), f = i.fix; if (f.kind === "snap") f.parcels.forEach((pid) => { (st.overrides.ringReplace[pid] = st.overrides.ringReplace[pid] || {})[f.from] = f.to; }); if (f.kind === "reorder") st.overrides.reorder[i.parcel] = f.ring; if (f.kind === "attr") (st.overrides.attrFix[f.parcel] = st.overrides.attrFix[f.parcel] || {})[f.field] = f.value; if (f.kind === "ack") st.overrides.ack[i.key] = true; }
+function approveAllSafe() {
+  const st = S(); const L = pending().filter((i) => i.fix.risk === "thấp" && can("approve." + i.agent));
+  if (!L.length) { if (!pending().some((i) => i.fix.risk === "thấp")) return toast("Không có đề xuất rủi ro thấp đang chờ"); return guard("approve.A1", "Duyệt hàng loạt"); }
+  L.forEach((i) => { st.decisions[i.key] = "duyet"; st.decLog.push({ text: i.fix.text, ok: true, note: "duyệt hàng loạt", by: who(), t: new Date() }); applyFix(i); audit("Duyệt hàng loạt", i.fix.text); });
+  runPipeline(false, "duyệt hàng loạt"); toast(`Đã duyệt ${L.length} đề xuất rủi ro thấp trong phạm vi quyền của bạn`);
+}
+/* ---------------- field verification (mô phỏng) ---------------- */
+function simulateFieldFix() {
+  if (!guard("data.edit", "Nạp kết quả xác minh ngoại nghiệp")) return;
+  const st = S(), fx = st.ds.fix; if (!fx) return toast("Tờ này không có kết quả xác minh mô phỏng");
+  let L = st.raw.pts.split(/\r?\n/); const coord = {}; L.forEach((l) => { const f = l.split(","); if (f.length >= 3 && !l.startsWith("#") && !(f[0] in coord)) coord[f[0]] = [f[1], f[2]]; });
+  const seen = {}; const out = [];
+  if (fx.header && !L[0].startsWith("#")) out.push(fx.header);
+  L.forEach((l) => {
+    const f = l.split(","); const id = f[0];
+    if (fx.dropDup.includes(id)) { if (seen[id]) return; seen[id] = 1; }
+    if (fx.remove.includes(id)) return;
+    if (fx.fixLine && fx.fixLine[id]) l = fx.fixLine[id];
+    else if (fx.shift[id]) { f[1] = (parseFloat(f[1]) + fx.shift[id][0]).toFixed(3); f[2] = (parseFloat(f[2]) + fx.shift[id][1]).toFixed(3); l = f.join(","); }
+    else if (fx.copyCoord[id] && coord[fx.copyCoord[id]]) { [f[1], f[2]] = coord[fx.copyCoord[id]]; l = f.join(","); }
+    out.push(l);
+  });
+  Object.entries(fx.addCopy).forEach(([id, src]) => { if (!coord[id] && coord[src]) out.push(`${id},${coord[src][0]},${coord[src][1]},5.00,GT`); });
+  st.raw.pts = out.join("\n");
+  const A = st.raw.att.split(/\r?\n/); const head = A[0].split(","); const body = [];
+  A.slice(1).forEach((l) => { if (!l.trim()) return; const f = l.split(","); if (fx.attRemove.includes(f[0])) return; const set = fx.attSet[f[0]]; if (set) Object.entries(set).forEach(([k, v]) => (f[head.indexOf(k)] = v)); body.push(f.join(",")); });
+  fx.attAdd.forEach((l) => { if (!body.some((b) => b.startsWith(l.split(",")[0] + ","))) body.push(l); });
+  st.raw.att = [A[0], ...body].join("\n"); fillEditors();
+  audit("Nạp kết quả xác minh ngoại nghiệp (mô phỏng)", `Tờ ${toNo()}: áp dụng bản sửa theo xác minh thực địa/hồ sơ`);
+  runPipeline(false, "nạp kết quả xác minh"); toast("Đã nạp kết quả xác minh (mô phỏng) và chạy lại");
+}
+/* ---------------- sign-off ---------------- */
+function signState() { const st = S(); if (!st.ran) return [false, "Chưa chạy quy trình"]; const b = blocking().length, p = pending().length; if (b) return [false, `${b} lỗi chặn chưa xử lý`]; if (p) return [false, `${p} đề xuất chưa quyết định`]; if (!can("sign")) return [false, "Đủ điều kiện, nhưng bạn không có quyền ký"]; return [true, "Đủ điều kiện ký"]; }
+function signOff() { if (!guard("sign", "Ký và xuất gói hồ sơ")) return; const st = S(); const name = $("signName").value.trim(); if (!name || !$("signChk").checked) return toast("Cần nhập họ tên và xác nhận trách nhiệm"); st.signed = { name, by: who(), t: new Date() }; audit("Ký và xuất gói hồ sơ", `Ký bởi ${name}; ${st.parcels.length} thửa; KTNT đạt; GeoAgent không tự nộp`); renderAll(); toast("Đã ký. Gói hồ sơ sẵn sàng — việc nộp do kỹ sư thực hiện"); }
+/* ---------------- rules ---------------- */
+function rlTypeChange() { const t = $("rlType").value; const w = $("rlValWrap"); w.innerHTML = t === "required_doc" ? `<select id="rlVal" data-perm="rules">${Object.entries(DOCS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select>` : t === "required_field" ? `<select id="rlVal" data-perm="rules">${["SO_GCN", "DT_PHAP_LY", "CHU_SD", "LOAI_DAT"].map((k) => `<option>${k}</option>`).join("")}</select>` : `<input type="number" id="rlVal" value="40" min="1" data-perm="rules">`; applyPermUI(); }
+function ruleText(r) { return r.type === "required_doc" ? `Bắt buộc có “${DOCS[r.val] || r.val}”` : r.type === "required_field" ? `Trường ${r.val} không được trống` : `Diện tích thửa ≥ ${r.val} m²`; }
+function addRule() { if (!guard("rules", "Tạo quy tắc")) return; const reason = $("rlReason").value.trim() || "(không ghi lý do)"; const r = { id: "R-" + (rules.length + 1), reason, type: $("rlType").value, val: $("rlVal").value, src: "Học từ lần trả hồ sơ", on: true }; rules.push(r); audit("Tạo quy tắc từ lần trả hồ sơ", `${r.id}: ${ruleText(r)} — lý do: ${reason}`); $("rlReason").value = ""; runPipeline(false, "tạo quy tắc " + r.id); toast("Đã tạo quy tắc và chạy lại tờ đang mở"); }
+function toggleRule(id) { if (!guard("rules", "Bật/tắt quy tắc")) return; const r = [...HISTORY_RULES, ...rules].find((x) => x.id === id); r.on = !r.on; audit(r.on ? "Bật quy tắc" : "Tắt quy tắc", `${r.id}: ${ruleText(r)}`); runPipeline(false, "đổi quy tắc"); }
+/* ---------------- export ---------------- */
+let modalPayload = null, downloadsApi = null;
+function openModal(title, name, text, note) { modalPayload = { name, text }; $("mTitle").textContent = title; $("mSub").textContent = name; $("mText").value = text; $("mNote").textContent = note; $("modal").classList.add("on"); }
+function exportFile(kind) {
+  if (!guard("export", "Xuất dữ liệu")) return; const st = S(); if (!st.ran) return toast("Chạy GeoAgent trước khi xuất"); const T = toNo();
+  if (kind === "geojson") openModal("GeoJSON thửa đất (VN-2000)", `geoagent_to${T}_thua.geojson`, JSON.stringify({ type: "FeatureCollection", name: "GeoAgent_To" + T, crs_note: `VN-2000, KTT ${config.ktt}, mui 3 do — khai bao he tuong ung khi nhap`, features: st.parcels.filter((p) => p.coords.length).map((p) => ({ type: "Feature", properties: Object.assign({ THUA: p.id, DT_DO: p.area ? +p.area.toFixed(1) : null, MA_TAM: tmpCode(p), TRANG_THAI: parcelStatus(p.id), DIEM_RUI_RO: riskScore(p.id) }, Object.fromEntries(Object.entries(st.attrs[p.id] || {}).filter(([k]) => !k.startsWith("_")))), geometry: { type: "Polygon", coordinates: [[...p.coords, p.coords[0]].map((c) => [+c[1].toFixed(3), +c[0].toFixed(3)])] } })) }, null, 1), "Tọa độ giữ nguyên hệ VN-2000 (x = Y Đông, y = X Bắc).");
+  else if (kind === "csv") { const h = ["THUA", "TO", "SO_THUA", "DT_PHAP_LY", "DT_DO", "LECH_PCT", "LOAI_DAT", "CHU_SD", "SO_GCN", "THANH_PHAN", "MA_TAM", "TRANG_THAI", "DIEM_RUI_RO"]; openModal("Bảng thuộc tính đã đối soát", `geoagent_to${T}_thuoc_tinh.csv`, [h.join(",")].concat(st.parcels.map((p) => { const a = st.attrs[p.id] || {}; return [p.id, a.TO, a.SO_THUA, a.DT_PHAP_LY, p.area ? p.area.toFixed(1) : "", a._dev != null ? a._dev.toFixed(2) : "", a.LOAI_DAT, a.CHU_SD, a.SO_GCN, a.THANH_PHAN, tmpCode(p), parcelStatus(p.id), riskScore(p.id)].map((v) => v ?? "").join(","); })).join("\n"), "UTF-8, phân tách bằng dấu phẩy."); }
+  else { const q = qaChecks(); openModal("Biên bản kiểm tra nội bộ (KTNT)", `bien_ban_ktnt_to${T}.txt`, [
+    "CÔNG TY PHƯỚC THỊNH — BIÊN BẢN KIỂM TRA NỘI BỘ (BẢN NHÁP DO GEOAGENT LẬP)", `Gói 01 · Xã thí điểm A · Tờ bản đồ số ${T} · Dữ liệu tổng hợp (pilot)`, `Thời điểm chạy: ${st.lastRun.toLocaleString("vi-VN")} · Hệ tọa độ: ${config.sys}, KTT ${config.ktt}° · Người xuất: ${who()}`, `Số thửa: ${st.parcels.length} · Sẵn sàng nộp: ${st.parcels.filter((p) => riskScore(p.id) === 0).length}`,
+    "", "I. BẢNG KIỂM", ...q.map((c, i) => `${i + 1}. [${c[1].length ? "KHÔNG ĐẠT" : "ĐẠT"}] ${c[0]}${c[1].length ? " — " + c[1].length + " phát hiện" : ""}`),
+    "", "II. CHỈ SỐ CHẤT LƯỢNG", ...quality().map((x) => `- ${x[0]}: ${(x[1] * 100).toFixed(0)}% (${x[2]})`),
+    "", "III. PHÁT HIỆN CÒN MỞ", ...st.issues.filter((i) => !i.acked && i.sev !== "thong_tin").map((i) => `- [${SEV_TXT[i.sev]}] ${i.msg} | Căn cứ: ${i.basis}`),
+    "", "IV. QUYẾT ĐỊNH ĐÃ GHI NHẬN", ...st.decLog.map((d) => `- [${d.ok ? "DUYỆT" : "TỪ CHỐI"}] ${d.text} — ${d.by}${d.note ? " — " + d.note : ""}`), ...(st.decLog.length ? [] : ["(chưa có)"]),
+    "", `V. KÝ: ${st.signed ? st.signed.name + " (tài khoản " + st.signed.by + ") — " + st.signed.t.toLocaleString("vi-VN") : "(chưa ký)"}`,
+    "", "Ghi chú: các tác tử chỉ chuẩn bị và kiểm tra; kết luận chuyên môn và việc nộp hồ sơ do kỹ sư có chứng chỉ thực hiện."].join("\n"), "Biên bản nội bộ — có giá trị khi kỹ sư/tổ trưởng ký."); }
+  audit("Xuất dữ liệu", kind + " · Tờ " + T);
+}
+function showSampleCSV(id, k) { if (!guard("export", "Xem/tải tệp CSV của tờ")) return; const d = DATASETS[id]; const n = { pts: "diem_do", par: "thua", att: "thuoc_tinh" }[k] + "_to" + id + ".csv"; openModal("Tệp gốc " + d.name, n, d[k], "Dữ liệu tổng hợp theo đúng cấu trúc 3 tệp."); audit("Xem tệp CSV gốc", n); }
+function closeModal() { $("modal").classList.remove("on"); }
+async function copyModal() { try { await navigator.clipboard.writeText($("mText").value); toast("Đã sao chép"); } catch (e) { $("mText").select(); toast("Trình xem chặn sao chép tự động — đã chọn sẵn, nhấn Ctrl+C"); } }
+async function saveModal() { if (!downloadsApi) return toast("Không tải tệp được ở chế độ xem này — dùng nút Sao chép"); try { await downloadsApi.save({ filename: modalPayload.name, data: modalPayload.text }); toast("Đã gửi yêu cầu tải " + modalPayload.name); } catch (e) { toast("Không tải được (đã hủy hoặc bị chặn) — dùng nút Sao chép"); } }
+
+/* ---------------- rendering ---------------- */
+function renderAll() {
+  const st = S(); const [okSign, why] = signState();
+  $("signBtn").disabled = !okSign || !!st.signed; $("signWhy").innerHTML = st.signed ? `<span class="chip ok">Đã ký bởi ${esc(st.signed.name)}</span>` : `<span class="chip ${okSign ? "ok" : "warn"}">${why}</span>`;
+  const pc = pending().length; $("qCount").style.display = pc ? "" : "none"; $("qCount").textContent = pc;
+  $("hdrStatus").textContent = st.ran ? (st.signed ? "Đã ký" : `${blocking().length} lỗi chặn · ${pc} chờ duyệt`) : "Chưa chạy";
+  $("runInfo").textContent = st.lastRun ? "Lần chạy gần nhất: " + st.lastRun.toLocaleTimeString("vi-VN") : "";
+  fillSheetSel(); renderGates(); renderOverview(); renderA1(); renderA2(); renderA3(); renderQA(); renderQueue(); renderRules(); renderKB(); renderSheetLib(); renderAccounts(); applyPermUI();
+  if (current === "nhat-ky") renderAudit();
+  if (!$("pipe").innerHTML) renderPipe(-1, st.ran ? 4 : -1);
+}
+function renderGates() { const g = [["Cổng 1 · Kỹ sư xác nhận thửa", pending("A1").length], ["Cổng 2 · Tổ trưởng duyệt cảnh báo pháp lý & CSDL", pending("A2").length + pending("A3").length]]; $("gates").innerHTML = g.map(([n, c]) => `<div class="row" style="justify-content:space-between;margin-bottom:8px"><div>${n}</div><div>${c ? `<span class="chip warn">${c} chờ duyệt</span> <a href="#duyet" class="small">Mở →</a>` : `<span class="chip ok">${S().ran ? "Đã thông" : "—"}</span>`}</div></div>`).join(""); }
+function renderOverview() {
+  const st = S(); $("ovEmpty").style.display = st.ran ? "none" : "";
+  renderPkg();
+  if (!st.ran) { ["ovKpi", "ovQuality", "ovIssues", "ovCap"].forEach((id) => ($(id).innerHTML = "")); return; }
+  const P = st.parcels, ready = P.filter((p) => riskScore(p.id) === 0).length, ts = tsCalc(P.length);
+  const kpi = [[`${ready}/${P.length}`, `thửa sẵn sàng nộp · Tờ ${esc(toNo())}`], [Object.keys(st.caught).length, "phát hiện trước khi nộp trong phiên"], [st.decLog.filter((d) => d.ok).length, "đề xuất sửa đã được duyệt"], [`${fmt(ts.save * 100, 0)}%`, "giảm thời gian back-office (theo baseline)"], [`${fmt(ts.hours, 1)} giờ`, `tiết kiệm cho ${P.length} thửa · ≈ ${fmt0(ts.per1000)} giờ / 1.000 thửa`]];
+  $("ovKpi").innerHTML = kpi.map((k) => `<div class="card kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div></div>`).join("");
+  $("ovQuality").innerHTML = quality().map(([k, v, d]) => `<div style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><b>${k}</b><b>${fmt(v * 100, 0)}%</b></div><div class="bar"><i style="width:${v * 100}%;background:${v >= .95 ? "var(--ok)" : v >= .8 ? "var(--accent)" : "var(--red)"}"></i></div><div class="small muted">${d}</div></div>`).join("");
+  const groups = {}; Object.values(st.caught).forEach((g) => (groups[g] = (groups[g] || 0) + 1)); const mx = Math.max(1, ...Object.values(groups)); const openN = st.issues.filter((i) => i.sev !== "thong_tin" && !i.acked).length;
+  $("ovIssues").innerHTML = (Object.keys(groups).length ? Object.entries(groups).sort((a, b) => b[1] - a[1]).map(([g, n]) => `<div class="row" style="margin-bottom:6px;flex-wrap:nowrap"><div style="width:170px;flex:none" class="small">${g}</div><div class="bar" style="flex:1"><i style="width:${n / mx * 100}%;background:var(--accent)"></i></div><div class="small" style="width:24px;text-align:right">${n}</div></div>`).join("") : `<span class="chip ok">Không phát hiện lỗi nào</span>`) + `<div class="small muted" style="margin-top:6px">Tính từ đầu phiên cho tờ đang mở; còn mở: <b>${openN}</b>.</div>`;
+  const cap = 1 / (1 - 0.6 * ts.save);
+  $("ovCap").innerHTML = `<div class="row" style="gap:24px;align-items:flex-end"><div><div class="score" style="color:var(--accent)">≈${fmt(cap, 2)}×</div><div class="muted small">khối lượng nội nghiệp với cùng đội ngũ</div></div><div class="small muted" style="flex:1;min-width:200px">Công thức: 1 / (1 − tỷ trọng back-office × mức giảm). Tỷ trọng back-office giả định 60%; mức giảm ${fmt(ts.save * 100, 0)}% từ bảng thời gian. Ngoại nghiệp, thiết bị, chứng chỉ hành nghề không giảm theo.</div></div>`;
+}
+function renderPkg() {
+  const stg = ["Ngoại nghiệp", "Xử lý nội nghiệp", "Đạt KTNT", "Ký & xuất"]; const bar = (v) => `<td class="num"><div class="bar" style="width:60px;display:inline-block;vertical-align:middle"><i style="width:${v}%"></i></div> ${v}%</td>`;
+  const rowsHtml = Object.values(sheets).map((s) => { const r = s.ran ? Math.round(s.parcels.filter((p) => riskScore(p.id, s) === 0).length / (s.parcels.length || 1) * 100) : 0; return `<tr class="click ${s.id === activeId ? "sel" : ""}" onclick="switchSheet('${s.id}')"><td>${s.id === activeId ? "<b>" : ""}${esc(s.ds.name)}${s.id === activeId ? "</b>" : ""}</td>${[100, s.ran ? 100 : 0, r, s.signed ? 100 : 0].map(bar).join("")}</tr>`; }).join("");
+  $("ovPkg").innerHTML = `<table><tr><th>Tờ bản đồ (Gói 01)</th>${stg.map((s) => `<th class="num">${s}</th>`).join("")}</tr>${rowsHtml}<tr><td class="muted">Gói 02 · Xã B (giả lập)</td>${[100, 72, 40, 10].map(bar).join("")}</tr></table><div class="small muted" style="margin-top:6px">Chạm vào một tờ để mở. Tiến độ Gói 01 tính từ dữ liệu thật của các tờ trên trang này.</div>`;
+}
+function drawMap() {
+  const st = S(); const P = st.parcels.filter((p) => p.coords.length); if (!P.length) { $("map").innerHTML = `<svg></svg>`; return; }
+  let bb = [Infinity, Infinity, -Infinity, -Infinity]; P.forEach((p) => { const b = bbox(p.coords); bb = [Math.min(bb[0], b[0]), Math.min(bb[1], b[1]), Math.max(bb[2], b[2]), Math.max(bb[3], b[3])]; });
+  const pad = 12, W = 900, H = Math.round(Math.min(900, Math.max(380, W * (bb[2] - bb[0] + 20) / (bb[3] - bb[1] + 20)))); const s = Math.min((W - 2 * pad) / (bb[3] - bb[1] + 20), (H - 2 * pad) / (bb[2] - bb[0] + 20));
+  const X = (c) => pad + (c[1] - bb[1] + 10) * s, Y = (c) => H - pad - (c[0] - bb[0] + 10) * s;
+  const path = (cs) => cs.map((c, i) => (i ? "L" : "M") + X(c).toFixed(1) + " " + Y(c).toFixed(1)).join(" ") + "Z";
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Bản đồ tờ ${esc(toNo())}">`;
+  P.forEach((p) => { svg += `<path class="p-${parcelStatus(p.id)}" d="${path(p.coords)}" fill-opacity=".9" style="cursor:pointer;stroke:${st.selected === p.id ? "var(--m-sel)" : "var(--m-stroke)"};stroke-width:${st.selected === p.id ? 3 : 1}" onclick="selectParcel('${p.id}')"><title>${p.id}</title></path>`; });
+  if ($("showPlan").checked) PLAN.forEach((L) => { svg += `<path d="${path(L.poly)}" fill="${L.fill}" stroke="${L.color}" stroke-width="1.5" stroke-dasharray="6 4" pointer-events="none"/>`; });
+  P.forEach((p) => { const c = centroid(p.coords); svg += `<text x="${X(c)}" y="${Y(c) + 4}" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--text)" pointer-events="none">${p.id}</text>`; });
+  Object.values(st.points).forEach((pt) => { if (pt.flags.length || pt.x < bb[0] - 30 || pt.x > bb[2] + 30 || pt.y < bb[1] - 30 || pt.y > bb[3] + 30) return; const bad = st.issues.some((i) => i.point === pt.id && !i.acked); svg += `<circle cx="${X([pt.x, pt.y])}" cy="${Y([pt.x, pt.y])}" r="${bad ? 4.5 : 2.2}" style="fill:${bad ? "var(--red)" : "var(--m-pt)"}"><title>${pt.id} X=${pt.x.toFixed(3)} Y=${pt.y.toFixed(3)}</title></circle>`; });
+  const sb = 20 * s; svg += `<g transform="translate(${W - pad - sb - 10},${H - 22})"><rect width="${sb}" height="5" style="fill:var(--text)"/><text x="${sb / 2}" y="-4" font-size="11" text-anchor="middle" style="fill:var(--muted)">20 m</text></g><g transform="translate(${W - 30},28)"><path d="M0 -14 L6 6 L0 2 L-6 6Z" style="fill:var(--text)"/><text y="20" font-size="11" text-anchor="middle" style="fill:var(--muted)">B</text></g>`;
+  $("map").innerHTML = svg + "</svg>";
+}
+function selectParcel(id) { S().selected = id; drawMap(); renderParcelPanel(); renderA1Table(); }
+function issueHTML(i) { const d = S().decisions[i.key]; return `<div class="issue ${i.acked ? "thong_tin" : i.sev}"><div class="row" style="justify-content:space-between;flex-wrap:nowrap;align-items:flex-start"><span class="m">${esc(i.msg)}</span><span class="chip ${i.acked ? "ok" : SEV_CHIP[i.sev]}">${i.acked ? "Đã xác nhận" : SEV_TXT[i.sev]}</span></div><div class="b">Căn cứ: ${esc(i.basis)}</div>${i.fix ? `<div class="b">${i.fix.kind === "manual" ? "Việc cần làm" : "Đề xuất"}: ${esc(i.fix.text)}${d ? ` · <b>${d === "duyet" ? "đã duyệt" : "đã từ chối"}</b>` : ""}</div>` : ""}</div>`; }
+function renderParcelPanel() {
+  const st = S(); const p = st.parcels.find((x) => x.id === st.selected); if (!p) { $("parcelPanel").innerHTML = `<h2>Chi tiết thửa</h2><div class="muted">Chọn một thửa trên bản đồ hoặc trong bảng.</div>`; return; }
+  const a = st.attrs[p.id] || {}; const iss = issuesOf(p.id); const rs = riskScore(p.id), [rl, rc] = riskLabel(rs);
+  $("parcelPanel").innerHTML = `<div class="row" style="justify-content:space-between"><h2 style="margin:0">Thửa ${p.id}</h2><span class="chip ${rc}">${rl} · rủi ro ${rs}</span></div>
+  <table style="margin:10px 0"><tr><td>Diện tích đo mới</td><td class="num"><b>${p.invalid ? "—" : fmt(p.area, 1) + " m²"}</b></td></tr><tr><td>Diện tích trên GCN</td><td class="num">${a.DT_PHAP_LY ? fmt(+a.DT_PHAP_LY, 1) + " m²" : "—"}</td></tr><tr><td>Lệch</td><td class="num">${a._dev != null ? fmt(a._dev, 2) + "%" : "—"}</td></tr><tr><td>Chu vi</td><td class="num">${fmt(p.perim, 2)} m</td></tr><tr><td>Loại đất · Số thửa</td><td class="num">${esc(a.LOAI_DAT || "—")} · ${esc(a.SO_THUA || "—")}</td></tr><tr><td>Mã thửa tạm</td><td class="num mono small">${esc(tmpCode(p))}</td></tr></table>
+  <div class="small muted" style="margin-bottom:6px">Cách tính: diện tích theo công thức Gauss trên tọa độ VN-2000, không làm tròn trung gian.</div>
+  <h3>Tọa độ góc thửa</h3><div class="scroll" style="max-height:150px"><table><tr><th>Điểm</th><th class="num">X (m)</th><th class="num">Y (m)</th></tr>${p.ring.map((pid) => { const q = st.points[pid]; return `<tr><td class="mono">${esc(pid)}</td><td class="num mono">${q ? q.x.toFixed(3) : "—"}</td><td class="num mono">${q ? q.y.toFixed(3) : "—"}</td></tr>`; }).join("")}</table></div>
+  <h3 style="margin-top:10px">Phát hiện (${iss.length})</h3>${iss.length ? iss.map(issueHTML).join("") : `<div class="chip ok">Không có phát hiện</div>`}`;
+}
+function renderA1() {
+  const st = S(); drawMap(); renderParcelPanel(); renderA1Table();
+  if (!st.ran) { $("a1Points").innerHTML = `<div class="muted">Tờ này chưa chạy.</div>`; return; }
+  const I = st.issues.filter((i) => i.agent === "A1" && (i.point || ["SYS", "KTT", "NO_META"].includes(i.code)));
+  $("a1Points").innerHTML = `<div class="row" style="margin-bottom:8px"><span class="chip info">${Object.keys(st.points).length} điểm đọc được</span><span class="chip ${st.meta.HE_TOA_DO ? "ok" : "warn"}">Hệ: ${esc(st.meta.HE_TOA_DO || "không khai báo")}</span><span class="chip ${st.meta.KTT && +st.meta.KTT === +config.ktt ? "ok" : "err"}">KTT tệp: ${esc(st.meta.KTT || "—")}° · cấu hình: ${config.ktt}°</span></div>${I.length ? I.map(issueHTML).join("") : `<div class="chip ok">Không phát hiện lỗi số liệu điểm</div>`}`;
+}
+function renderA1Table() { const st = S(); if (!st.ran) { $("a1Table").innerHTML = ""; return; } $("a1Table").innerHTML = `<table><tr><th>Thửa</th><th class="num">Đỉnh</th><th class="num">DT đo (m²)</th><th class="num">DT GCN</th><th class="num">Lệch %</th><th>Trạng thái</th></tr>${st.parcels.map((p) => { const a = st.attrs[p.id] || {}; const s = parcelStatus(p.id); return `<tr class="click ${st.selected === p.id ? "sel" : ""}" onclick="selectParcel('${p.id}')"><td><b>${p.id}</b></td><td class="num">${p.ring.length}</td><td class="num">${p.invalid ? "—" : fmt(p.area, 1)}</td><td class="num">${a.DT_PHAP_LY ? fmt(+a.DT_PHAP_LY, 1) : "—"}</td><td class="num">${a._dev != null ? fmt(a._dev, 2) : "—"}</td><td><span class="chip ${s === "ok" ? "ok" : SEV_CHIP[s]}">${s === "ok" ? "Đạt" : SEV_TXT[s]}</span></td></tr>`; }).join("")}</table>`; }
+function renderA2() {
+  const st = S(); $("pfFormula").textContent = "Điểm rủi ro = 40 × lỗi kỹ thuật + 25 × thiếu thành phần hồ sơ + 15 × cảnh báo (chưa xác nhận), tối đa 100. 0 = sẵn sàng nộp.";
+  if (!st.ran) { $("pfTable").innerHTML = ""; $("planList").innerHTML = `<div class="muted">Tờ này chưa chạy.</div>`; return; }
+  const P = [...st.parcels].sort((a, b) => riskScore(b.id) - riskScore(a.id));
+  $("pfTable").innerHTML = `<table><tr><th>Thửa</th><th class="num">Rủi ro</th><th>Kết luận</th><th>Lý do chính</th></tr>${P.map((p) => { const s = riskScore(p.id); const [l, c] = riskLabel(s); const top = [...new Set(issuesOf(p.id).filter((i) => !i.acked && i.sev !== "thong_tin").map((i) => CODE_GROUP(i.code)))].slice(0, 2).join(", "); return `<tr class="click" onclick="location.hash='khong-gian';selectParcel('${p.id}')"><td><b>${p.id}</b></td><td class="num"><b>${s}</b></td><td><span class="chip ${c}">${l}</span></td><td class="small">${top || "—"}</td></tr>`; }).join("")}</table>`;
+  const pl = st.issues.filter((i) => i.code.startsWith("PLAN_")); $("planList").innerHTML = pl.length ? pl.map(issueHTML).join("") : `<div class="chip ok">Không có xung đột</div>`;
+}
+function renderKB() { const d = $("kbDate").value || new Date().toISOString().slice(0, 10); $("kbN").textContent = KB.length; $("kbList").innerHTML = KB.map((e) => { const s = kbStatus(e, d); return `<div class="kb"><div class="row" style="justify-content:space-between"><span class="t">${esc(e.t)}</span><span class="chip ${s.c}">${s.s}</span></div><div class="small">${esc(e.s)}</div><div class="small muted">Hiệu lực từ: ${e.from ? vnDate(e.from) : "cần xác minh"}${e.to ? " · đến " + vnDate(e.to) : ""} · Độ chắc chắn: ${esc(e.cert)}${e.note ? " · " + esc(e.note) : ""}</div></div>`; }).join(""); }
+function askKB() {
+  const raw = $("kbQ").value.trim(); const q = strip(raw); const d = $("kbDate").value || new Date().toISOString().slice(0, 10); if (!q) return;
+  const words = q.split(/\s+/).filter((w) => w.length > 1);
+  const scored = KB.map((e) => { let s = 0; e.k.forEach((k) => { if (q.includes(k)) s += 3; else words.forEach((w) => { if (k.split(" ").includes(w)) s += 1; }); }); words.forEach((w) => { if (strip(e.s).includes(w)) s += 0.5; }); return [s, e]; }).filter((x) => x[0] >= 2).sort((a, b) => b[0] - a[0]).slice(0, 3);
+  const valid = scored.filter(([, e]) => kbStatus(e, d).ok), invalid = scored.filter(([, e]) => !kbStatus(e, d).ok);
+  audit("Tra cứu căn cứ", `“${raw}” tại ${vnDate(d)} → ${valid.length ? valid.map(([, e]) => e.id).join(", ") : "không đủ căn cứ"}`);
+  if (!valid.length) { $("kbAns").innerHTML = `<div class="note"><b>Không đủ căn cứ trong kho tri thức tại ngày ${vnDate(d)}.</b> GeoAgent không trả lời khi không có văn bản phù hợp đang hiệu lực — chuyển câu hỏi cho bộ phận pháp chế.${invalid.length ? `<br>Có văn bản liên quan nhưng không áp dụng tại ngày này: ${invalid.map(([, e]) => esc(e.t) + " (" + kbStatus(e, d).s + ")").join("; ")}.` : ""}</div>`; return; }
+  $("kbAns").innerHTML = `<div class="note teal">${valid.map(([, e]) => `<div style="margin-bottom:6px"><b>${esc(e.t)}</b> — <span class="small">${kbStatus(e, d).s}</span><br>${esc(e.s)}<br><span class="small">Độ chắc chắn: ${esc(e.cert)}. Tóm tắt tra cứu nội bộ; đối chiếu văn bản gốc trước khi dùng trong hồ sơ.</span></div>`).join("")}</div>`;
+}
+function renderA3() {
+  const st = S(); if (!st.ran) { $("a3Score").innerHTML = ""; $("a3Table").innerHTML = ""; return; }
+  $("a3Score").innerHTML = quality().map(([k, v, d]) => `<div class="card kpi"><div class="v" style="color:${v >= .95 ? "var(--ok)" : v >= .8 ? "var(--accent-d)" : "var(--red)"}">${fmt(v * 100, 0)}%</div><div class="l"><b style="color:var(--text)">${k}</b> — ${d}</div></div>`).join("");
+  const ids = [...new Set([...st.parcels.map((p) => p.id), ...Object.keys(st.attrs)])];
+  $("a3Table").innerHTML = `<table><tr><th>Thửa</th><th>Tờ</th><th>Số thửa</th><th>DT GCN</th><th class="num">DT đo</th><th>Loại đất</th><th>Chủ SD</th><th>Số GCN</th><th>Thành phần</th><th>Mã thửa tạm</th></tr>${ids.map((id) => { const p = st.parcels.find((x) => x.id === id) || { id, coords: [], ring: [] }; const a = st.attrs[id] || {}; const bad = (f) => issuesOf(id).some((i) => !i.acked && (i.code === "FIELD_" + f || (f === "LOAI_DAT" && i.code === "LANDCODE") || (f === "SO_THUA" && i.code === "DUP_SO") || (f === "DT_PHAP_LY" && i.code === "AREA_DEV") || (f === "THANH_PHAN" && i.code === "DOCS"))); const cell = (f, v) => `<td style="${bad(f) ? "background:var(--red-l);color:var(--red);font-weight:600" : ""}">${esc(v ?? "")}${st.overrides.attrFix[id] && st.overrides.attrFix[id][f] ? ' <span class="pill" style="background:var(--teal-l);color:var(--teal)">đã sửa</span>' : ""}</td>`; const orphan = !st.parcels.some((x) => x.id === id); return `<tr><td><b>${esc(id)}</b>${orphan ? " <span class='chip err'>mồ côi</span>" : ""}</td>${cell("TO", a.TO)}${cell("SO_THUA", a.SO_THUA)}${cell("DT_PHAP_LY", a.DT_PHAP_LY)}<td class="num">${p.area && !p.invalid ? fmt(p.area, 1) : "—"}</td>${cell("LOAI_DAT", a.LOAI_DAT)}${cell("CHU_SD", st.attrs[id] ? a.CHU_SD : "(không có bản ghi)")}${cell("SO_GCN", a.SO_GCN)}${cell("THANH_PHAN", a.THANH_PHAN)}<td class="mono small">${esc(tmpCode(p))}</td></tr>`; }).join("")}</table>`;
+}
+function renderQA() {
+  const st = S(); $("qaCheck").innerHTML = st.ran ? qaChecks().map((c, i) => `<div class="row" style="justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);flex-wrap:nowrap"><div><b>${i + 1}.</b> ${c[0]} <span class="small muted">(${c[2]})</span></div><span class="chip ${c[1].length ? "err" : "ok"}">${c[1].length ? c[1].length + " phát hiện" : "Đạt"}</span></div>`).join("") : `<div class="muted">Tờ này chưa chạy.</div>`;
+  if (!$("tsForm").innerHTML) $("tsForm").innerHTML = `<table><tr><th>Công đoạn</th><th class="num">Baseline (phút/thửa)</th><th class="num">Tự động hóa (%)</th></tr>${TS.map((r, i) => `<tr><td>${r[0]}</td><td class="num"><input type="number" min="0" style="width:76px" value="${tsVals[i].base}" oninput="tsVals[${i}].base=+this.value||0;renderTS();renderOverview()"></td><td class="num"><input type="number" min="0" max="100" style="width:66px" value="${tsVals[i].auto}" oninput="tsVals[${i}].auto=Math.min(100,+this.value||0);renderTS();renderOverview()"></td></tr>`).join("")}</table>`;
+  renderTS();
+}
+function renderTS() { const t = tsCalc(S().parcels.length || 24); $("tsOut").innerHTML = `<div class="grid g3"><div class="card kpi"><div class="v">${fmt(t.base, 0)} → ${fmt(t.after, 1)}</div><div class="l">phút/thửa (baseline → có GeoAgent)</div></div><div class="card kpi"><div class="v" style="color:var(--teal)">−${fmt(t.save * 100, 0)}%</div><div class="l">thời gian back-office</div></div><div class="card kpi"><div class="v">${fmt0(t.per1000)} giờ</div><div class="l">tiết kiệm / 1.000 thửa</div></div></div><div class="small muted" style="margin-top:6px">Công thức: Σ baseline × (1 − tỷ lệ tự động hóa). Chỉ có giá trị khi baseline là số đo thật của công ty.</div>`; }
+function renderQueue() {
+  const st = S(); if (!st.ran) { $("queue").innerHTML = `<div class="muted">Tờ này chưa chạy.</div>`; return; }
+  const P = pending(); const mine = ["A1", "A2", "A3"].filter((a) => can("approve." + a));
+  $("bulkNote").textContent = mine.length ? `Phạm vi duyệt của bạn: ${mine.map((a) => "Agent 0" + a[1]).join(", ")}` : "Bạn không có quyền duyệt — chỉ xem";
+  $("bulkBtn").disabled = !mine.length; $("bulkBtn").classList.toggle("nope", !mine.length);
+  const card = (i) => { const ok = can("approve." + i.agent); return `<div class="card" style="margin-bottom:10px"><div class="row" style="justify-content:space-between"><div class="row" style="gap:6px"><span class="chip ${SEV_CHIP[i.sev]}">${SEV_TXT[i.sev]}</span><span class="chip grey">Agent 0${i.agent[1]}</span><span class="chip ${i.fix.risk === "thấp" ? "info" : "warn"}">Rủi ro ${i.fix.risk}</span></div><div class="small muted">${i.parcel ? "Thửa " + esc(i.parcel) : esc(i.point || "")}</div></div>
+  <div style="margin:8px 0 4px"><b>${esc(i.msg)}</b></div><div class="small muted">Căn cứ: ${esc(i.basis)}</div><div class="small" style="margin-top:6px">Đề xuất: <b>${esc(i.fix.text)}</b></div>
+  <div class="row" style="margin-top:10px"><input type="text" id="note-${cssKey(i.key)}" placeholder="Ghi chú (tùy chọn)" style="flex:1;min-width:180px" ${ok ? "" : "disabled"}><button class="btn ok sm ${ok ? "" : "nope"}" ${ok ? "" : "disabled"} onclick="decide('${i.key}',true)">Duyệt & áp dụng</button><button class="btn red sm ${ok ? "" : "nope"}" ${ok ? "" : "disabled"} onclick="decide('${i.key}',false)">Từ chối</button>${ok ? "" : `<span class="lockline">Cần quyền “${PERM_NAME["approve." + i.agent]}”</span>`}</div></div>`; };
+  $("queue").innerHTML = (P.length ? P.map(card).join("") : `<div class="card"><span class="chip ok">Không còn đề xuất chờ duyệt</span></div>`)
+    + (st.decLog.length ? `<h2 style="margin-top:18px">Đã quyết định (${st.decLog.length})</h2>${st.decLog.map((d) => `<div class="issue thong_tin"><span class="m">${esc(d.text)}</span> — <b>${d.ok ? "Đã duyệt" : "Đã từ chối"}</b> <span class="small muted">· ${esc(d.by)}${d.note ? " · " + esc(d.note) : ""}</span></div>`).join("")}` : "")
+    + `<div class="note" style="margin-top:12px">Các phát hiện “việc cần làm” (chồng lấn vượt ngưỡng, trùng tên điểm, thiếu hồ sơ, mã loại đất mơ hồ…) không có nút tự sửa: GeoAgent không sửa dữ liệu khi cần quay lại ngoại nghiệp hoặc hồ sơ gốc.${st.ds.fix ? `<div class="row" style="margin-top:8px"><button class="btn sec sm" data-perm="data.edit" onclick="simulateFieldFix()">Mô phỏng: nạp kết quả xác minh ngoại nghiệp & bổ sung hồ sơ</button><span class="small">Để chạy thử trọn quy trình đến bước ký (cần quyền sửa dữ liệu).</span></div>` : ""}</div>`;
+}
+function renderRules() { $("ruleList").innerHTML = [...HISTORY_RULES, ...rules].map((r) => { const hit = S().issues.filter((i) => (r.type === "required_doc" && i.code === "DOCS" && (i.extra || "").includes(r.val)) || (r.type === "required_field" && i.code === "FIELD_" + r.val) || (r.type === "min_area" && i.code === "MINAREA" && i.extra == r.val)).length; return `<div class="kb"><div class="row" style="justify-content:space-between"><span class="t">${r.id} · ${esc(ruleText(r))}</span><button class="btn sec sm" data-perm="rules" onclick="toggleRule('${r.id}')">${r.on ? "Tắt" : "Bật"}</button></div><div class="small">Nguồn: ${esc(r.src)} — “${esc(r.reason)}”</div><div class="small muted">${r.on ? `Đang áp dụng · lần chạy gần nhất (Tờ ${esc(activeId)}) bắt được <b>${hit}</b> vi phạm` : "Đang tắt"}</div></div>`; }).join(""); }
+function renderAudit() { $("audit").innerHTML = `<table class="small"><tr><th>#</th><th>Thời điểm</th><th>Người dùng</th><th>Tờ</th><th>Hành động</th><th>Chi tiết</th><th>Băm</th></tr>${AUDIT.map((r, i) => `<tr${r.action === "Từ chối truy cập" ? ' style="color:var(--red)"' : ""}><td>${i + 1}</td><td>${new Date(r.t).toLocaleString("vi-VN")}</td><td>${esc(r.actor)}</td><td>${esc(r.sheet)}</td><td><b>${esc(r.action)}</b></td><td>${esc(r.detail)}</td><td class="hash">${r.hash.slice(0, 14)}…</td></tr>`).reverse().join("")}</table>`; }
+function renderSheetLib() {
+  $("sheetLib").innerHTML = Object.values(sheets).map((s) => { const r = s.ran ? s.parcels.filter((p) => riskScore(p.id, s) === 0).length + "/" + s.parcels.length + " sẵn sàng" : "chưa chạy"; return `<div class="sheet ${s.id === activeId ? "active" : ""}"><div class="row" style="justify-content:space-between"><b>${esc(s.ds.name)}</b><span class="chip ${s.signed ? "ok" : s.ran ? "info" : "grey"}">${s.signed ? "Đã ký" : r}</span></div><div class="small muted" style="margin:4px 0 8px">${esc(s.ds.desc)}</div>
+    <details><summary class="small" style="cursor:pointer">Đáp án lỗi cài sẵn (${s.ds.errors.length})</summary><ol class="small" style="padding-left:18px;margin:6px 0">${s.ds.errors.map((e) => `<li>${esc(e)}</li>`).join("")}</ol></details>
+    <div class="row" style="margin-top:8px"><button class="btn sm ${s.id === activeId ? "sec" : ""}" onclick="switchSheet('${s.id}')">${s.id === activeId ? "Đang mở" : "Mở tờ này"}</button><button class="btn amber sm" data-perm="run" onclick="switchSheet('${s.id}');runPipeline(true)">▶ Chạy</button></div>
+    <div class="row" style="margin-top:6px;gap:6px"><button class="btn sec sm" data-perm="export" onclick="showSampleCSV('${s.id}','pts')">CSV điểm</button><button class="btn sec sm" data-perm="export" onclick="showSampleCSV('${s.id}','par')">CSV thửa</button><button class="btn sec sm" data-perm="export" onclick="showSampleCSV('${s.id}','att')">CSV thuộc tính</button></div></div>`; }).join("");
+  $("editTitle").textContent = "Dữ liệu " + S().ds.name;
+}
+function fillSheetSel() { $("sheetSel").innerHTML = Object.values(sheets).map((s) => `<option value="${s.id}" ${s.id === activeId ? "selected" : ""}>Tờ ${s.id}${s.ran ? " · " + blocking(s).length + " lỗi" : ""}</option>`).join(""); }
+
+/* ---------------- inputs / sheets / config ---------------- */
+function fillEditors() { const st = S(); $("tPts").value = st.raw.pts; $("tPar").value = st.raw.par; $("tAtt").value = st.raw.att; }
+function readInputs() { if (!can("data.edit")) return; const st = S(); const p = $("tPts").value, q = $("tPar").value, a = $("tAtt").value; if (p !== st.raw.pts || q !== st.raw.par || a !== st.raw.att) { st.raw = { pts: p, par: q, att: a }; audit("Sửa dữ liệu đầu vào", "Cập nhật nội dung 3 tệp từ ô nhập"); } }
+function loadFile(ev, which) { if (!guard("data.edit", "Nạp tệp")) { ev.target.value = ""; return; } const f = ev.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => { ({ pts: $("tPts"), par: $("tPar"), att: $("tAtt") })[which].value = r.result; audit("Nạp tệp", `${f.name} (${f.size} byte)`); toast("Đã nạp " + f.name + " — bấm Chạy GeoAgent"); }; r.readAsText(f, "utf-8"); }
+function resetSheet() { if (!guard("data.edit", "Nạp lại dữ liệu gốc của tờ")) return; sheets[activeId] = newSheet(activeId); fillEditors(); $("pipe").innerHTML = ""; $("log").innerHTML = ""; audit("Nạp lại dữ liệu gốc", S().ds.name); renderAll(); toast("Đã nạp lại dữ liệu gốc của tờ " + activeId); }
+function switchSheet(id) { if (!sheets[id] || id === activeId) return; activeId = id; fillEditors(); $("pipe").innerHTML = ""; $("log").innerHTML = ""; renderAll(); toast("Đang mở " + S().ds.name); }
+function fillConfig() { $("cfKtt").innerHTML = KTT_OPTIONS.map(([v, l]) => `<option value="${v}" ${v === config.ktt ? "selected" : ""}>${l}</option>`).join(""); $("cfXa").value = config.xa; $("cfTol").value = config.tol; $("cfSnap").value = config.snap; $("cfOut").value = config.outlier; $("cfGrid").value = config.grid; $("cfOv").value = config.minOverlap; }
+function saveConfig() { if (!guard("config", "Đổi cấu hình")) return; const old = JSON.stringify(config); config.ktt = $("cfKtt").value; config.xa = $("cfXa").value.trim() || "XA-A"; config.tol = Math.max(0, +$("cfTol").value || 0); config.snap = Math.max(0, +$("cfSnap").value || 0); config.outlier = Math.max(100, +$("cfOut").value || 2000); config.grid = Math.max(0.05, +$("cfGrid").value || 0.25); config.minOverlap = Math.max(0, +$("cfOv").value || 0); audit("Đổi cấu hình", `${old} → ${JSON.stringify(config)}`); Object.values(sheets).forEach((s) => (s.ran = s.ran && s.id === activeId)); runPipeline(false, "đổi cấu hình"); toast("Đã lưu cấu hình và chạy lại tờ đang mở"); }
+
+/* ---------------- routing ---------------- */
+const VIEWS = ["tong-quan", "dieu-phoi", "khong-gian", "phap-ly", "csdl", "qa", "duyet", "so-tay", "nhat-ky", "du-lieu", "tai-khoan", "cai-dat"];
+let current = "dieu-phoi";
+function route() {
+  if (!me) return;
+  const h = location.hash.replace("#", ""); let v = VIEWS.includes(h) ? h : (can("view.overview") ? "tong-quan" : "dieu-phoi");
+  if (!viewAllowed(v)) { toast("Bạn không có quyền xem mục này"); audit("Từ chối truy cập", "Mở mục " + v); v = "dieu-phoi"; history.replaceState(null, "", "#dieu-phoi"); }
+  current = v; document.querySelectorAll(".view").forEach((el) => el.classList.toggle("on", el.id === "v-" + v)); document.querySelectorAll("nav a").forEach((a) => a.classList.toggle("active", a.dataset.v === v));
+  if (v === "nhat-ky") renderAudit(); if (v === "khong-gian") drawMap(); document.querySelector("main").scrollTop = 0; toggleNav(false);
+}
+window.addEventListener("hashchange", route);
+
+/* ---------------- boot ---------------- */
+(function boot() {
+  const th = store.get("ga.theme") || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); setTheme(th);
+  loadAccounts();
+  $("kbDate").value = new Date().toISOString().slice(0, 10);
+  fillConfig(); fillUserSel(); rlTypeChange(); fillEditors();
+  audit("Khởi động pilot", "Nạp thư viện " + Object.keys(DATASETS).length + " tờ bản đồ mẫu", "Hệ thống");
+  renderLogin(); ensureHashes().then(() => { if (!restoreSession()) setTimeout(() => $("lgUser").focus(), 30); });
+  try { if (window.claude && typeof window.claude.use === "function") window.claude.use("downloads").then((d) => { downloadsApi = d; if (!d) $("mSave").style.display = "none"; }).catch(() => ($("mSave").style.display = "none")); else $("mSave").style.display = "none"; } catch (e) { $("mSave").style.display = "none"; }
+})();
+</script>
+</body>
+</html>
